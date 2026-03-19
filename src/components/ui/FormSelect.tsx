@@ -1,33 +1,45 @@
 import { type ComponentProps } from 'react'
+import { FormControl, InputLabel, Select, MenuItem, type SelectChangeEvent } from '@mui/material'
 
 interface Option {
   label: string
   value: string
 }
 
-interface FormSelectProps extends ComponentProps<'select'> {
+interface FormSelectProps extends Omit<ComponentProps<'select'>, 'onChange'> {
   label: string
   options: (string | Option)[]
   placeholder?: string
+  onChange?: (e: SelectChangeEvent<string>) => void
 }
 
-export function FormSelect({ label, options, placeholder = 'Select an option', className, ...props }: FormSelectProps) {
+export function FormSelect({ label, options, placeholder = 'Select an option', value, onChange }: FormSelectProps) {
   return (
-    <div className="space-y-2">
-      <label className="text-xs font-semibold uppercase tracking-widest text-gray-500 ml-1">
-        {label}
-      </label>
-      <select
-        className={`w-full bg-black text-white border-b border-white/30 focus:border-white px-4 py-3 outline-none transition-colors duration-300 cursor-pointer appearance-none ${className}`}
-        {...props}
+    <FormControl fullWidth variant="standard">
+      <InputLabel
+        sx={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' }}
       >
-        <option value="" disabled>{placeholder}</option>
+        {label}
+      </InputLabel>
+      <Select
+        value={(value as string) || ''}
+        onChange={onChange}
+        label={label}
+        displayEmpty
+      >
+        <MenuItem value="" disabled>
+          {placeholder}
+        </MenuItem>
         {options.map((opt) => {
-          const label = typeof opt === 'string' ? opt : opt.label
-          const value = typeof opt === 'string' ? opt : opt.value
-          return <option key={value} value={value}>{label}</option>
+          const optLabel = typeof opt === 'string' ? opt : opt.label
+          const optValue = typeof opt === 'string' ? opt : opt.value
+          return (
+            <MenuItem key={optValue} value={optValue}>
+              {optLabel}
+            </MenuItem>
+          )
         })}
-      </select>
-    </div>
+      </Select>
+    </FormControl>
   )
 }

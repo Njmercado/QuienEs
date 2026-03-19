@@ -1,19 +1,40 @@
-import { supabase } from "../lib/supabase"
-import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { type Profile } from "../objects/profile"
+import { supabase } from '../lib/supabase'
+import { useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { type Profile } from '../objects/profile'
+import {
+  Box,
+  Typography,
+  Chip,
+  Divider,
+  Skeleton,
+  Paper,
+} from '@mui/material'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
-function InfoField({ label, value }: { label: string; value?: string }) {
+interface InfoFieldProps {
+  label: string
+  value?: string
+}
+
+function InfoField({ label, value }: InfoFieldProps) {
   if (!value) return null
   return (
-    <div className="space-y-1">
-      <dt className="text-xs font-bold uppercase tracking-widest text-[#666]">
+    <Box>
+      <Typography
+        variant="caption"
+        sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: '#555', display: 'block', mb: 0.5 }}
+      >
         {label}
-      </dt>
-      <dd className="text-lg font-medium text-white border-b border-white/10 pb-1">
+      </Typography>
+      <Typography
+        variant="body1"
+        fontWeight={500}
+        sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 0.5 }}
+      >
         {value}
-      </dd>
-    </div>
+      </Typography>
+    </Box>
   )
 }
 
@@ -43,112 +64,248 @@ export function Public() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-black flex items-center justify-center p-4">
-        <div className="animate-pulse space-y-4 text-center">
-          <div className="h-4 w-48 bg-white/20 rounded mx-auto"></div>
-          <div className="text-xs font-bold uppercase tracking-widest text-gray-500">Loading Profile...</div>
-        </div>
-      </main>
+      <Box
+        component="main"
+        sx={{ minHeight: '100vh', bgcolor: 'background.default', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <FavoriteIcon sx={{ color: 'text.disabled', fontSize: 32, animation: 'pulse 1.5s ease-in-out infinite' }} />
+          <Skeleton variant="text" width={200} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: 'text.disabled' }}>
+            Loading Profile...
+          </Typography>
+        </Box>
+      </Box>
     )
   }
 
   if (error || !profile) {
     return (
-      <main className="min-h-screen bg-black flex items-center justify-center p-4">
-        <div className="text-center space-y-4 bg-[#0a0a0a] p-12 rounded-2xl border border-white/10">
-          <h1 className="text-3xl font-bold bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent">
+      <Box
+        component="main"
+        sx={{ minHeight: '100vh', bgcolor: 'background.default', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}
+      >
+        <Paper
+          sx={{
+            p: 6,
+            textAlign: 'center',
+            bgcolor: 'background.paper',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+          }}
+        >
+          <Typography
+            variant="h2"
+            fontWeight={900}
+            sx={{ background: 'linear-gradient(135deg, #fff, #666)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+          >
             404
-          </h1>
-          <p className="text-gray-400 font-mono text-sm">Profile not found or is private.</p>
-        </div>
-      </main>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" fontFamily="monospace">
+            Profile not found or is private.
+          </Typography>
+        </Paper>
+      </Box>
     )
   }
 
   return (
-    <main className="min-h-screen bg-black text-white p-4 md:p-8 flex flex-col items-center justify-center relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        p: { xs: 2, md: 4 },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Background gradient */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: 500,
+          background: 'linear-gradient(to bottom, rgba(255,255,255,0.03), transparent)',
+          pointerEvents: 'none',
+        }}
+      />
 
-      <article className="w-full max-w-2xl bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.05)] relative z-10 animate-in fade-in zoom-in-95 duration-500">
-
+      <Paper
+        component="article"
+        sx={{
+          width: '100%',
+          maxWidth: 672,
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+          overflow: 'hidden',
+          boxShadow: '0 0 50px rgba(255,255,255,0.04)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Header */}
-        <header className="p-8 md:p-12 border-b border-white/10 relative overflow-hidden bg-black/40">
-          {/* Abstract Circle Decor */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+        <Box
+          component="header"
+          sx={{
+            p: { xs: 4, md: 6 },
+            borderBottom: '1px solid',
+            borderColor: 'divider',
+            bgcolor: 'rgba(0,0,0,0.4)',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Decorative blob */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: 256,
+              height: 256,
+              bgcolor: 'rgba(255,255,255,0.04)',
+              borderRadius: '50%',
+              filter: 'blur(60px)',
+              transform: 'translate(50%, -50%)',
+              pointerEvents: 'none',
+            }}
+          />
 
-          <div className="relative z-10 text-center space-y-4">
-            <div className="inline-block px-3 py-1 border border-white/20 rounded-full bg-white/5 backdrop-blur-sm">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Miebro MiCuervo</span>
-            </div>
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-2">
-                {profile.profile_title || 'Untitled'}
-              </h1>
-              <p className="text-lg text-gray-400 font-light max-w-lg mx-auto leading-relaxed">
-                {profile.profile_description}
-              </p>
-            </div>
-          </div>
-        </header>
+          <Box sx={{ position: 'relative', zIndex: 1 }}>
+            <Chip
+              label="Miembro MiCuervo"
+              size="small"
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: 'text.primary',
+                fontSize: 10,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                mb: 2,
+                fontWeight: 900,
+                backdropFilter: 'blur(4px)',
+              }}
+            />
+            <Typography variant="h3" fontWeight={900} letterSpacing="-0.04em" gutterBottom>
+              {profile.profile_title || 'Untitled'}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 480, mx: 'auto', lineHeight: 1.7 }}>
+              {profile.profile_description}
+            </Typography>
+          </Box>
+        </Box>
 
         {/* Content */}
-        <div className="p-8 md:p-12 space-y-12">
+        <Box sx={{ p: { xs: 4, md: 6 } }}>
+          {/* Personal Info */}
+          <Box component="section" sx={{ mb: 6 }} aria-label="Personal Information">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Typography
+                variant="caption"
+                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}
+              >
+                Información Personal
+              </Typography>
+              <Divider sx={{ flexGrow: 1, borderColor: 'divider' }} />
+            </Box>
 
-          {/* Personal Info Section */}
-          <section aria-label="Personal Information" className="space-y-6">
-            <div className="flex items-center gap-4">
-              <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-white/40">Información Personal</h2>
-              <div className="h-px bg-white/10 flex-grow" />
-            </div>
-
-            <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+            <Box
+              component="dl"
+              sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}
+            >
               <InfoField label="Nombre Completo" value={profile.data?.fullName} />
               <InfoField label="Documento" value={`${profile.data?.idType} - ${profile.data?.idNumber}`} />
               <InfoField label="RH" value={profile.data?.rh} />
               <InfoField label="Seguro Médico" value={profile.data?.healthInsurance} />
               {profile.data?.healthInsuranceNumber && (
-                <InfoField label="N° Seguro" value={profile.data?.healthInsuranceNumber} />
+                <InfoField label="N° Seguro" value={profile.data.healthInsuranceNumber} />
               )}
-            </dl>
+            </Box>
 
             {profile.data?.extraInfo && (
-              <div className="pt-4">
-                <dt className="text-xs font-bold uppercase tracking-widest text-[#666] mb-2">Información Extra</dt>
-                <dd className="bg-white/5 p-4 rounded-lg text-sm text-gray-300 leading-relaxed border border-white/5">
-                  {profile.data.extraInfo}
-                </dd>
-              </div>
+              <Box sx={{ mt: 3 }}>
+                <Typography
+                  variant="caption"
+                  component="dt"
+                  sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: '#555', display: 'block', mb: 1 }}
+                >
+                  Información Extra
+                </Typography>
+                <Box
+                  component="dd"
+                  sx={{ bgcolor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 2, p: 2 }}
+                >
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                    {profile.data.extraInfo}
+                  </Typography>
+                </Box>
+              </Box>
             )}
-          </section>
+          </Box>
 
-          {/* Emergency Info Section */}
-          <section aria-label="Emergency Information" className="space-y-6">
-            <div className="flex items-center gap-4">
-              <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-red-500/60">Contacto de Emergencia</h2>
-              <div className="h-px bg-red-500/20 flex-grow" />
-            </div>
+          {/* Emergency Info */}
+          <Box component="section" aria-label="Emergency Information">
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+              <Typography
+                variant="caption"
+                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(239,83,80,0.6)', whiteSpace: 'nowrap' }}
+              >
+                Contacto de Emergencia
+              </Typography>
+              <Divider sx={{ flexGrow: 1, borderColor: 'rgba(239,83,80,0.2)' }} />
+            </Box>
 
-            <div className="bg-gradient-to-br from-red-950/20 to-black border border-red-900/20 p-6 rounded-xl relative overflow-hidden group">
-              {/* Red Glow on Hover */}
-              <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative z-10">
+            <Paper
+              sx={{
+                background: 'linear-gradient(135deg, rgba(183,28,28,0.1), rgba(0,0,0,0.5))',
+                border: '1px solid rgba(183,28,28,0.15)',
+                borderRadius: 2,
+                p: 3,
+                position: 'relative',
+                overflow: 'hidden',
+                '&:hover::before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: 0,
+                  bgcolor: 'rgba(239,83,80,0.04)',
+                },
+              }}
+            >
+              <Box
+                component="dl"
+                sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, position: 'relative', zIndex: 1 }}
+              >
                 <InfoField label="Nombre Contacto" value={profile.data?.emergencyName} />
                 <InfoField label="Numero Contacto" value={profile.data?.emergencyContact} />
                 <InfoField label="Parentesco" value={profile.data?.emergencyRelationship} />
-              </dl>
-            </div>
-          </section>
-
-        </div>
+              </Box>
+            </Paper>
+          </Box>
+        </Box>
 
         {/* Footer */}
-        <footer className="p-6 border-t border-white/10 text-center bg-black/40">
-          <p className="text-[10px] uppercase tracking-widest text-gray-700">Protegido por sistema MiCuervo</p>
-        </footer>
-
-      </article>
-    </main>
+        <Box
+          component="footer"
+          sx={{ p: 3, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center', bgcolor: 'rgba(0,0,0,0.4)' }}
+        >
+          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: '#444' }}>
+            Protegido por sistema MiCuervo
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
   )
 }

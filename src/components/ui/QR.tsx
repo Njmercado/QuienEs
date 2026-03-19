@@ -1,9 +1,11 @@
+import { Box, Button, Typography } from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download'
+
 export interface QRProps {
   qrCode: string
 }
 
 export const QR = ({ qrCode }: QRProps) => {
-
   const downloadImage = () => {
     const link = document.createElement('a')
     link.href = qrCode
@@ -12,26 +14,54 @@ export const QR = ({ qrCode }: QRProps) => {
   }
 
   return (
-    <div className="text-center space-y-8 animate-in zoom-in-95 duration-500">
-      <div className="relative group mx-auto w-48 h-48 bg-white p-2 rounded-lg">
-        <div className="absolute inset-0 bg-white blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
-        <img
+    <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+      <Box
+        sx={{
+          position: 'relative',
+          width: 192,
+          height: 192,
+          bgcolor: 'white',
+          p: 1,
+          borderRadius: 2,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            bgcolor: 'white',
+            filter: 'blur(24px)',
+            opacity: 0.2,
+            borderRadius: 2,
+            transition: 'opacity 0.3s',
+          },
+          '&:hover::before': {
+            opacity: 0.4,
+          },
+        }}
+      >
+        <Box
+          component="img"
           src={qrCode}
           alt="Tu clave QR personal"
-          className="w-full h-full object-contain relative z-10"
+          sx={{ width: '100%', height: '100%', objectFit: 'contain', position: 'relative', zIndex: 1 }}
         />
-      </div>
+      </Box>
 
-      <p className="text-sm text-gray-500 max-w-xs mx-auto">
+      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 280 }}>
         Escanea este código para acceder instantáneamente a tu perfil público.
-      </p>
+      </Typography>
 
-      <button
+      <Button
         onClick={downloadImage}
-        className="text-gray-500 font-bold py-4 px-6 hover:text-white transition-colors duration-300 tracking-widest text-sm cursor-pointer"
+        variant="text"
+        startIcon={<DownloadIcon />}
+        sx={{
+          color: 'text.secondary',
+          letterSpacing: '0.1em',
+          '&:hover': { color: 'text.primary' },
+        }}
       >
         Descargar QR
-      </button>
-    </div>
+      </Button>
+    </Box>
   )
 }

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect } from 'react'
+import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface ModalProps {
   isOpen: boolean
@@ -9,50 +10,61 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, children, title }: ModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
-
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'hidden'
     }
-
     return () => {
       document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
     }
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
-
-  return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div
-        ref={modalRef}
-        className="relative w-full max-w-lg bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          bgcolor: 'background.paper',
+          backgroundImage: 'none',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 3,
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          textTransform: 'uppercase',
+          letterSpacing: '0.08em',
+          fontWeight: 700,
+          py: 2,
+          px: 3,
+        }}
       >
-        <div className="flex items-center justify-between p-6 border-b border-white/10 sticky top-0 bg-[#0a0a0a] z-10">
-          <h3 className="text-xl font-bold text-white tracking-wide uppercase">{title}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 w-10 rounded-full cursor-pointer"
-            aria-label="Cerrar modal"
-          >
-            ✕
-          </button>
-        </div>
-        <div className="p-6">
-          {children}
-        </div>
-      </div>
-    </div>,
-    document.body
+        {title}
+        <IconButton
+          onClick={onClose}
+          size="small"
+          aria-label="Cerrar modal"
+          sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary', bgcolor: 'rgba(255,255,255,0.08)' } }}
+        >
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent sx={{ p: 3, pt: 3 }}>
+        {children}
+      </DialogContent>
+    </Dialog>
   )
 }

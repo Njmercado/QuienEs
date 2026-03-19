@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom'
 import { QRCard } from './ui/QRCard'
 import { supabase } from '../lib/supabase'
 import { toast } from 'react-hot-toast'
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Alert,
+  Divider,
+  CircularProgress,
+} from '@mui/material'
 
 export function SignUp() {
   const [loading, setLoading] = useState(false)
@@ -22,12 +31,9 @@ export function SignUp() {
         email,
         password,
         options: {
-          data: {
-            display_name: name,
-          }
-        }
+          data: { display_name: name },
+        },
       })
-
       if (error) throw error
       setShowQR(true)
     } catch (err) {
@@ -40,93 +46,143 @@ export function SignUp() {
   }
 
   return (
-    <main>
-      <div className="flex flex-col items-center space-y-4">
-        <img src="black.png" alt="crow simple image" width='100px' />
-        <h1 className="text-4xl font-bold tracking-tighter text-white">
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        px: 2,
+        bgcolor: 'background.default',
+      }}
+    >
+      {/* Logo / Brand */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, mb: 4 }}>
+        <Box component="img" src="black.png" alt="crow simple image" sx={{ width: 80 }} />
+        <Typography variant="h4" fontWeight={900} letterSpacing="-0.05em" color="text.primary">
           CUERVO
-        </h1>
-      </div>
+        </Typography>
+      </Box>
+
       {!showQR ? (
-        <div className="w-full max-w-md p-8 space-y-8 bg-black border border-white/20 rounded-xl shadow-[0_0_50px_rgba(255,255,255,0.1)] mt-8">
-          <form className="space-y-6" onSubmit={handleSignUp}>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: 440,
+            bgcolor: 'background.paper',
+            border: '1px solid',
+            borderColor: 'divider',
+            borderRadius: 3,
+            boxShadow: '0 0 50px rgba(255,255,255,0.07)',
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
+          }}
+        >
+          <Box
+            component="form"
+            onSubmit={handleSignUp}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
+          >
             {error && (
-              <div className="p-3 bg-red-900/50 border border-red-500/50 text-red-200 text-xs text-center">
+              <Alert
+                severity="error"
+                sx={{
+                  bgcolor: 'rgba(211, 47, 47, 0.1)',
+                  border: '1px solid rgba(211, 47, 47, 0.3)',
+                  color: '#ef9a9a',
+                  '& .MuiAlert-icon': { color: '#ef9a9a' },
+                }}
+              >
                 {error}
-              </div>
+              </Alert>
             )}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-widest text-gray-500 ml-1">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-black text-white border-b border-white/30 focus:border-white px-4 py-3 outline-none transition-colors duration-300 placeholder:text-gray-700"
-                  placeholder="Your Name"
-                />
-              </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-widest text-gray-500 ml-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-black text-white border-b border-white/30 focus:border-white px-4 py-3 outline-none transition-colors duration-300 placeholder:text-gray-700"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
+            <TextField
+              label="Name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your Name"
+              fullWidth
+              variant="standard"
+              InputLabelProps={{ sx: { textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' } }}
+            />
 
-              <div className="space-y-2">
-                <label className="text-xs font-semibold uppercase tracking-widest text-gray-500 ml-1">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-black text-white border-b border-white/30 focus:border-white px-4 py-3 outline-none transition-colors duration-300 placeholder:text-gray-700"
-                  placeholder="••••••••"
-                  required
-                  minLength={6}
-                />
-              </div>
-            </div>
+            <TextField
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              fullWidth
+              required
+              variant="standard"
+              InputLabelProps={{ sx: { textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' } }}
+            />
 
-            <button
+            <TextField
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              fullWidth
+              required
+              inputProps={{ minLength: 6 }}
+              variant="standard"
+              InputLabelProps={{ sx: { textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' } }}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
               disabled={loading}
-              className="w-full bg-white text-black font-bold py-4 px-6 hover:bg-gray-200 transition-colors duration-300 uppercase tracking-widest text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              size="large"
+              sx={{ py: 1.8 }}
+              startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
             >
               {loading ? 'Creating Account...' : 'Create Account'}
-            </button>
+            </Button>
+          </Box>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/10"></div>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase tracking-widest">
-                <span className="bg-black px-4 text-gray-500">Or sign up with</span>
-              </div>
-            </div>
+          <Divider sx={{ '&::before, &::after': { borderColor: 'divider' } }}>
+            <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              Or sign up with
+            </Typography>
+          </Divider>
 
-            <div className="grid grid-cols-1 gap-4">
-              <button type="button" className="flex items-center justify-center px-6 py-3 border border-white/20 hover:border-white/50 hover:bg-white/5 transition-all duration-300 text-white group cursor-pointer">
-                <span className="font-semibold text-sm">Google</span>
-              </button>
-            </div>
-          </form>
+          <Button
+            variant="outlined"
+            fullWidth
+            sx={{
+              borderColor: 'divider',
+              color: 'text.primary',
+              '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'rgba(255,255,255,0.04)' },
+            }}
+          >
+            Google
+          </Button>
 
-          <p className="text-center text-xs text-gray-600">
-            Already have an account? <Link to="/" className="text-white underline underline-offset-4 hover:text-gray-200 cursor-pointer">Sign in</Link>
-          </p>
-        </div>
-      ) : <QRCard />}
-    </main>
+          <Typography variant="caption" color="text.secondary" align="center">
+            Already have an account?{' '}
+            <Box
+              component={Link}
+              to="/"
+              sx={{ color: 'text.primary', textDecoration: 'underline', '&:hover': { color: 'text.secondary' } }}
+            >
+              Sign in
+            </Box>
+          </Typography>
+        </Box>
+      ) : (
+        <QRCard />
+      )}
+    </Box>
   )
 }

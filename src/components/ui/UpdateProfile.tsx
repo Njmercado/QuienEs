@@ -1,6 +1,20 @@
 import { type Profile as ProfileType } from '../../objects/profile'
 import { ProfileForm } from './ProfileForm'
 import { useState } from 'react'
+import {
+  Box,
+  Button,
+  Paper,
+  Typography,
+  Collapse,
+  IconButton,
+  Stack,
+} from '@mui/material'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import SaveIcon from '@mui/icons-material/Save'
 
 interface ProfileProps {
   profile: ProfileType
@@ -23,67 +37,113 @@ export function UpdateProfile({
   const [isExpanded, setIsExpanded] = useState(expand)
 
   return (
-    <article
-      className={`bg-[#0a0a0a] border ${localProfile.chosen ? 'border-yellow-500/50 shadow-[0_0_20px_rgba(234,179,8,0.1)]' : 'border-white/10'} rounded-xl overflow-hidden transition-all duration-300`}
+    <Paper
+      component="article"
+      sx={{
+        bgcolor: 'background.paper',
+        border: '1px solid',
+        borderColor: localProfile.chosen ? 'rgba(234,179,8,0.5)' : 'divider',
+        borderRadius: 2,
+        overflow: 'hidden',
+        boxShadow: localProfile.chosen ? '0 0 20px rgba(234,179,8,0.1)' : 'none',
+        transition: 'all 0.3s ease',
+      }}
     >
       {/* Header / Click to Expand */}
-      <header
-        onClick={(e) => {
-          e.stopPropagation()
-          setIsExpanded(!isExpanded)
+      <Box
+        component="header"
+        onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded) }}
+        sx={{
+          p: 3,
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          userSelect: 'none',
+          '&:hover': { bgcolor: 'rgba(255,255,255,0.03)' },
+          transition: 'background-color 0.2s',
         }}
-        className="p-6 cursor-pointer hover:bg-white/5 transition-colors flex justify-between items-center group select-none"
       >
-        <div className="flex items-center gap-4">
-          {
-            isChosenable &&
-            <button
+        <Stack direction="row" spacing={2} alignItems="center">
+          {isChosenable && (
+            <IconButton
               onClick={onChosen}
-              className={`text-2xl transition-colors hover:scale-110 active:scale-95 ${localProfile.chosen ? 'text-yellow-500' : 'text-gray-700 hover:text-yellow-500/50'}`}
-              title={localProfile.chosen ? "Current Profile" : "Set as Current"}
+              size="small"
+              sx={{
+                color: localProfile.chosen ? '#eab308' : 'text.disabled',
+                '&:hover': { color: '#eab308', transform: 'scale(1.1)' },
+                transition: 'all 0.2s',
+              }}
+              title={localProfile.chosen ? 'Current Profile' : 'Set as Current'}
             >
-              ★
-            </button>
-          }
-          <div className="space-y-1">
-            <h3 className={`text-lg font-bold transition-colors ${localProfile.chosen ? 'text-yellow-500' : 'group-hover:text-blue-400'}`}>
-              {localProfile.profile_title || 'Untitled Profile'}
-            </h3>
-            <p className="text-sm text-gray-500">{localProfile.profile_description || 'No description'}</p>
-          </div>
-        </div>
+              {localProfile.chosen ? <StarIcon /> : <StarBorderIcon />}
+            </IconButton>
+          )}
 
-        <div className="flex items-center gap-4">
-          {
-            isChosenable &&
-            <button
-              onClick={onDelete}
-              className="text-gray-600 hover:text-red-500 transition-colors px-2 py-1 text-xs uppercase tracking-widest font-bold z-10"
+          <Box>
+            <Typography
+              variant="subtitle1"
+              fontWeight={700}
+              sx={{ color: localProfile.chosen ? '#eab308' : 'text.primary', transition: 'color 0.2s' }}
             >
-              Delete
-            </button>
-          }
-          <span className={`text-gray-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
-            ▼
-          </span>
-        </div>
-      </header>
+              {localProfile.profile_title || 'Untitled Profile'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {localProfile.profile_description || 'No description'}
+            </Typography>
+          </Box>
+        </Stack>
+
+        <Stack direction="row" spacing={1} alignItems="center">
+          {isChosenable && (
+            <IconButton
+              onClick={onDelete}
+              size="small"
+              sx={{ color: 'text.disabled', '&:hover': { color: 'error.main' }, transition: 'color 0.2s' }}
+              title="Delete profile"
+            >
+              <DeleteOutlineIcon fontSize="small" />
+            </IconButton>
+          )}
+          <ExpandMoreIcon
+            sx={{
+              color: 'text.secondary',
+              transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s ease',
+            }}
+          />
+        </Stack>
+      </Box>
 
       {/* Collapsible Content */}
-      {isExpanded && (
-        <div className="p-8 border-t border-white/10 animate-in fade-in slide-in-from-top-4 duration-300">
+      <Collapse in={isExpanded}>
+        <Box
+          sx={{
+            p: 4,
+            borderTop: '1px solid',
+            borderColor: 'divider',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+          }}
+        >
           <ProfileForm
             profile={localProfile}
-            onUpdate={(profile: ProfileType) => setLocalProfile(profile)}
+            onUpdate={(updated: ProfileType) => setLocalProfile(updated)}
           />
-          <button
+          <Button
             onClick={() => onSave(localProfile)}
-            className="w-full bg-white text-black font-bold py-4 px-6 hover:bg-gray-200 transition-colors duration-300 uppercase tracking-widest text-sm cursor-pointer shadow-lg"
+            variant="contained"
+            color="primary"
+            fullWidth
+            size="large"
+            startIcon={<SaveIcon />}
+            sx={{ py: 1.8 }}
           >
             Guardar Cambios
-          </button>
-        </div>
-      )}
-    </article>
+          </Button>
+        </Box>
+      </Collapse>
+    </Paper>
   )
 }

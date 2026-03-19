@@ -1,3 +1,5 @@
+import { Box, Fab } from '@mui/material'
+
 export interface FloatingButtonProps {
   children: React.ReactNode
   onClick?: () => void
@@ -5,33 +7,50 @@ export interface FloatingButtonProps {
   className?: string
 }
 
-export function FloatingButton({ children, onClick, position = 'bottom-right', className }: FloatingButtonProps) {
+const positionStyles: Record<NonNullable<FloatingButtonProps['position']>, object> = {
+  'bottom-right': { bottom: 32, right: 32 },
+  'bottom-left': { bottom: 32, left: 32 },
+  'top-right': { top: 32, right: 32 },
+  'top-left': { top: 32, left: 32 },
+  'bottom-center': { bottom: 32, left: '50%', transform: 'translateX(-50%)' },
+}
 
-  const getPosition = () => {
-    switch (position) {
-      case 'bottom-right':
-        return 'bottom-8 right-8'
-      case 'bottom-left':
-        return 'bottom-8 left-8'
-      case 'top-right':
-        return 'top-8 right-8'
-      case 'top-left':
-        return 'top-8 left-8'
-      case 'bottom-center':
-        return 'bottom-8 left-1/2 transform -translate-x-1/2'
-    }
-  }
-
+export function FloatingButton({
+  children,
+  onClick,
+  position = 'bottom-right',
+  className,
+}: FloatingButtonProps) {
   return (
-    <div
-      onClick={onClick}
-      className={
-        `flex fixed z-40 w-16 h-16 bg-white text-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 cursor-pointer border-4 border-black 
-        ${getPosition()}
-        ${className}
-      `}
+    <Box
+      sx={{
+        position: 'fixed',
+        zIndex: 40,
+        ...positionStyles[position],
+      }}
+      className={className}
     >
-      {children}
-    </div>
+      <Fab
+        onClick={onClick}
+        sx={{
+          bgcolor: 'white',
+          color: 'black',
+          width: 64,
+          height: 64,
+          boxShadow: '0 0 20px rgba(255,255,255,0.25)',
+          border: '4px solid black',
+          '&:hover': {
+            bgcolor: 'white',
+            transform: 'scale(1.1)',
+          },
+          '&:active': {
+            transform: 'scale(0.95)',
+          },
+          transition: 'all 0.3s ease',
+        }}
+      >
+        {children}
+      </Fab>
+    </Box>
   )
 }

@@ -3,16 +3,27 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { useProfiles } from '../hooks/useProfiles'
 import { type Profile as ProfileType } from '../objects/profile'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { UpdateProfile } from './ui/UpdateProfile'
 import { CreateProfile } from './ui/CreateProfile'
 import toast from 'react-hot-toast'
-import { useState } from 'react'
 import { Modal } from './ui/Modal'
 import { SideDrawer } from './ui/SideDrawer'
 import { useQR } from '../hooks/useQR'
 import { QR } from './ui/QR'
 import { FloatingButton } from './ui/FloatingButton'
+import {
+  Box,
+  Button,
+  Divider,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material'
+import QrCode2Icon from '@mui/icons-material/QrCode2'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import AddIcon from '@mui/icons-material/Add'
 
 export function Dashboard() {
   const [showQRModal, setShowQRModal] = useState(false)
@@ -20,12 +31,9 @@ export function Dashboard() {
   const { qrCode, generateQR } = useQR()
   const { user } = useAuth()
   const navigate = useNavigate()
-  const {
-    profiles,
-    loadProfiles,
-    removeProfile,
-    chooseProfile,
-  } = useProfiles()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { profiles, loadProfiles, removeProfile, chooseProfile } = useProfiles()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -35,7 +43,7 @@ export function Dashboard() {
   const reloadProfiles = () => {
     if (!user) return
     supabase.from('PublicUser').select('*').eq('user_id', user.id).then(({ data }) => {
-      loadProfiles(data ?? []);
+      loadProfiles(data ?? [])
     })
   }
 
@@ -49,33 +57,32 @@ export function Dashboard() {
       profile_title: profile.profile_title,
       data: profile.data,
       chosen: profile.chosen,
-      user_id: user?.id
-    });
+      user_id: user?.id,
+    })
 
     if (error) {
-      console.error('Error saving profile:', error)
       toast.error('Error saving profile')
       return
     }
 
     reloadProfiles()
-
     window.scrollTo({ top: 0, behavior: 'smooth' })
     toast.success(`Perfil ${profile.profile_title} guardado`)
   }
 
   const updateProfile = async (profile: ProfileType) => {
-    const { error } = await supabase.from('PublicUser').update({
-      profile_description: profile.profile_description,
-      profile_title: profile.profile_title,
-      data: profile.data,
-      chosen: profile.chosen,
-    })
+    const { error } = await supabase
+      .from('PublicUser')
+      .update({
+        profile_description: profile.profile_description,
+        profile_title: profile.profile_title,
+        data: profile.data,
+        chosen: profile.chosen,
+      })
       .eq('id', profile.id)
-      .eq('user_id', user?.id);
+      .eq('user_id', user?.id)
 
     if (error) {
-      console.error('Error updating profile:', error)
       toast.error('Error updating profile')
       return
     }
@@ -88,10 +95,9 @@ export function Dashboard() {
       .from('PublicUser')
       .update({ chosen: true })
       .eq('id', id)
-      .eq('user_id', user?.id);
+      .eq('user_id', user?.id)
 
     if (error) {
-      console.error('Error updating profile:', error)
       toast.error('Error updating profile')
       return
     }
@@ -101,10 +107,10 @@ export function Dashboard() {
   }
 
   const handleDeleteProfile = async (id: string) => {
-    const profile = profiles.find(p => p.id == id)
+    const profile = profiles.find((p) => p.id == id)
     if (profile?.chosen) {
       toast.error('No puedes eliminar el perfil activo, primero cambia de perfil y luego elimina')
-      return;
+      return
     }
 
     const { error } = await supabase.from('PublicUser').delete().eq('id', id).eq('user_id', user?.id)
@@ -115,93 +121,132 @@ export function Dashboard() {
     }
 
     removeProfile(id)
-    toast.success(`Perfil eliminado`)
-  }
-
-  const visitPublicProfile = () => {
-    return (
-      <a
-        href={`/public/${user?.id}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-4 py-2 text-xs font-semibold border border-white/20 hover:bg-white text-gray-400 hover:text-black transition-colors uppercase tracking-widest cursor-pointer flex items-center rounded"
-      >
-        Visitar perfil publico
-      </a>
-    )
-  }
-
-  const createNewProfile = () => {
-    return (
-      <button
-        onClick={() => setShowNewProfileDrawer(true)}
-        className="px-4 py-2 text-xs font-semibold border border-white/20 hover:bg-white text-gray-400 hover:text-black transition-colors uppercase tracking-widest cursor-pointer flex items-center rounded"
-      >
-        Crear Perfil
-      </button>
-    )
+    toast.success('Perfil eliminado')
   }
 
   return (
-    <main className="min-h-screen md:min-w-screen lg:min-w-5xl bg-black p-8 text-white relative">
-      <div className="space-y-8">
-        <header className="border-b border-white/20 pb-6">
-          <div className="flex justify-end">
-            <button
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+        p: { xs: 2, md: 4 },
+        position: 'relative',
+      }}
+    >
+      <Box sx={{ maxWidth: 900, mx: 'auto' }}>
+        {/* Header */}
+        <Box component="header" sx={{ mb: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
+            <Button
               onClick={handleLogout}
-              className="px-4 py-2 text-sm font-semibold border border-white/20 hover:bg-white/10 transition-colors uppercase tracking-widest cursor-pointer"
+              variant="outlined"
+              size="small"
+              sx={{
+                borderColor: 'divider',
+                color: 'text.secondary',
+                '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'rgba(255,255,255,0.05)' },
+              }}
             >
               Salir
-            </button>
-          </div>
-          <div className="flex gap-4 w-full mt-1">
-            <h1 className="text-3xl font-bold tracking-tighter">{user?.identities?.[0].identity_data?.display_name}</h1>
-            <div className="gap-2 hidden md:flex">
-              {visitPublicProfile()}
-              {createNewProfile()}
-            </div>
-          </div>
-        </header>
+            </Button>
+          </Box>
 
-        <section className="space-y-4" aria-label="Profiles List">
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <Typography variant="h4" fontWeight={900} letterSpacing="-0.04em" sx={{ flexGrow: 1 }}>
+              {user?.identities?.[0].identity_data?.display_name}
+            </Typography>
+
+            {!isMobile && (
+              <Stack direction="row" spacing={1}>
+                <Button
+                  component="a"
+                  href={`/public/${user?.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="outlined"
+                  size="small"
+                  startIcon={<OpenInNewIcon />}
+                  sx={{
+                    borderColor: 'divider',
+                    color: 'text.secondary',
+                    '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'white', color: 'black' },
+                  }}
+                >
+                  Visitar perfil publico
+                </Button>
+                <Button
+                  onClick={() => setShowNewProfileDrawer(true)}
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    borderColor: 'divider',
+                    color: 'text.secondary',
+                    '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'white', color: 'black' },
+                  }}
+                >
+                  Crear Perfil
+                </Button>
+              </Stack>
+            )}
+          </Box>
+
+          <Divider sx={{ mt: 2, borderColor: 'divider' }} />
+        </Box>
+
+        {/* Profiles List */}
+        <Stack component="section" spacing={2} aria-label="Profiles List">
           {profiles.map((profile) => (
             <UpdateProfile
               key={profile.id}
               profile={profile}
               expand={false}
-              onChosen={(e) => { e.stopPropagation(); updateChosenStatus(profile.id, profile); }}
-              onDelete={(e) => { e.stopPropagation(); handleDeleteProfile(profile.id); }}
+              onChosen={(e) => { e.stopPropagation(); updateChosenStatus(profile.id, profile) }}
+              onDelete={(e) => { e.stopPropagation(); handleDeleteProfile(profile.id) }}
               onSave={(updatedProfile) => updateProfile(updatedProfile)}
             />
           ))}
-        </section>
-      </div>
+        </Stack>
+      </Box>
 
-      <FloatingButton position="bottom-left" className="block md:hidden">
-        <a
-          href={`/public/${user?.id}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="going.png" alt="" width="20" height="20" />
-        </a>
+      {/* Mobile FABs */}
+      {isMobile && (
+        <>
+          <FloatingButton position="bottom-left">
+            <Box
+              component="a"
+              href={`/public/${user?.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+              <OpenInNewIcon sx={{ color: 'black', fontSize: 22 }} />
+            </Box>
+          </FloatingButton>
+
+          <FloatingButton onClick={() => setShowNewProfileDrawer(true)} position="bottom-center">
+            <AddIcon sx={{ color: 'black', fontSize: 26 }} />
+          </FloatingButton>
+        </>
+      )}
+
+      <FloatingButton
+        onClick={() => {
+          generateQR()
+          setShowQRModal(true)
+        }}
+      >
+        <QrCode2Icon sx={{ color: 'black', fontSize: 30 }} />
       </FloatingButton>
 
-      <FloatingButton onClick={() => setShowNewProfileDrawer(true)} position="bottom-center" className="block md:hidden text-3xl font-bold">
-        <img src="add.png" alt="" width="20" height="20" />
-      </FloatingButton>
-
-      <FloatingButton onClick={() => {
-        generateQR()
-        setShowQRModal(true)
-      }}>
-        <img src="qr.png" alt="QR Code icon" width="32" height="32" />
-      </FloatingButton>
-
+      {/* QR Modal */}
       <Modal isOpen={showQRModal} onClose={() => setShowQRModal(false)} title="Tu Código QR">
         <QR qrCode={qrCode} />
       </Modal>
 
+      {/* New Profile Drawer */}
       <SideDrawer isOpen={showNewProfileDrawer} onClose={() => setShowNewProfileDrawer(false)} title="Nuevo Perfil">
         <CreateProfile
           onSave={(newProfile: ProfileType) => {
@@ -210,6 +255,6 @@ export function Dashboard() {
           }}
         />
       </SideDrawer>
-    </main>
+    </Box>
   )
 }

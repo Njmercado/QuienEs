@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQR } from '../../hooks/useQR'
 import { QR } from './QR'
+import { Box, Button } from '@mui/material'
+import DashboardIcon from '@mui/icons-material/Dashboard'
 
 export const QRCard = () => {
   const navigate = useNavigate()
@@ -12,14 +14,34 @@ export const QRCard = () => {
   }, [])
 
   return (
-    <div className="mt-8">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        mt: 4,
+        width: '100%',
+        maxWidth: 440,
+        bgcolor: 'background.paper',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 3,
+        p: 4,
+        boxShadow: '0 0 50px rgba(255,255,255,0.07)',
+      }}
+    >
       <QR qrCode={qrCode} />
-      <button
+      <Button
         onClick={() => navigate('/dashboard')}
-        className="w-full bg-white text-black font-bold py-4 px-6 hover:bg-gray-200 transition-colors duration-300 uppercase tracking-widest text-sm cursor-pointer"
+        variant="contained"
+        color="primary"
+        fullWidth
+        size="large"
+        startIcon={<DashboardIcon />}
+        sx={{ py: 1.8 }}
       >
         Entrar al Dashboard
-      </button>
-    </div>
+      </Button>
+    </Box>
   )
 }

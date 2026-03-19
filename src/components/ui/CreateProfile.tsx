@@ -1,6 +1,8 @@
-import { useState } from "react"
-import { ProfileForm } from "./ProfileForm"
+import { useState } from 'react'
+import { ProfileForm } from './ProfileForm'
 import { type Profile as ProfileType } from '../../objects/profile'
+import { Box, Button } from '@mui/material'
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 
 interface CreateProfileProps {
   onSave: (profile: ProfileType) => void
@@ -19,7 +21,7 @@ export function CreateProfile({ onSave }: CreateProfileProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <ProfileForm
         profile={{
           id: '',
@@ -41,12 +43,17 @@ export function CreateProfile({ onSave }: CreateProfileProps) {
         }}
         onUpdate={onUpdate}
       />
-      <button
+      <Button
         onClick={handleSave}
-        className="w-full bg-white text-black font-bold py-4 px-6 hover:bg-gray-200 transition-colors duration-300 uppercase tracking-widest text-sm cursor-pointer shadow-lg"
+        variant="contained"
+        color="primary"
+        fullWidth
+        size="large"
+        startIcon={<AddCircleOutlineIcon />}
+        sx={{ py: 1.8 }}
       >
         Crear perfil
-      </button>
-    </div>
+      </Button>
+    </Box>
   )
 }
