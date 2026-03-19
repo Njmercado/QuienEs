@@ -3,7 +3,7 @@ import { type Profile as ProfileType, type ProfileData } from '../../objects/pro
 import { FormInput } from './FormInput'
 import { FormSelect } from './FormSelect'
 import { RH, ID_TYPE } from '../../constants/profile.constant'
-import { Box, Typography, TextField } from '@mui/material'
+import { Box, Typography, TextField, alpha } from '@mui/material'
 import type { SelectChangeEvent } from '@mui/material'
 
 type ProfileAction =
@@ -53,7 +53,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
           gap: 3,
-          bgcolor: 'rgba(255,255,255,0.04)',
+          bgcolor: (theme) => theme.palette.custom.glassBg,
           p: 3,
           borderRadius: 2,
         }}
@@ -145,9 +145,9 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
-                  '&:hover fieldset': { borderColor: 'rgba(255,255,255,0.4)' },
-                  '&.Mui-focused fieldset': { borderColor: 'rgba(255,255,255,0.7)' },
+                  '& fieldset': { borderColor: (theme) => theme.palette.custom.glassBorder },
+                  '&:hover fieldset': { borderColor: (theme) => theme.palette.custom.glassHoverBorder },
+                  '&.Mui-focused fieldset': { borderColor: (theme) => theme.palette.custom.glassFocusBorder },
                 },
               }}
             />
@@ -159,12 +159,13 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
           component="section"
           aria-label="Emergency Information"
           sx={{
-            bgcolor: 'rgba(211, 47, 47, 0.05)',
+            bgcolor: (theme) => alpha(theme.palette.error.main, 0.05),
             '&:hover': {
-              bgcolor: 'rgba(211, 47, 47, 0.1)',
+              bgcolor: (theme) => theme.palette.custom.errorBg,
             },
             transition: 'background-color 0.3s ease',
-            border: '1px solid rgba(211, 47, 47, 0.3)',
+            border: '1px solid',
+            borderColor: (theme) => theme.palette.custom.errorBorder,
             borderRadius: 2,
             p: 3,
             position: 'relative',

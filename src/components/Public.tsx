@@ -9,6 +9,7 @@ import {
   Divider,
   Skeleton,
   Paper,
+  alpha,
 } from '@mui/material'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 
@@ -23,14 +24,14 @@ function InfoField({ label, value }: InfoFieldProps) {
     <Box>
       <Typography
         variant="caption"
-        sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: '#555', display: 'block', mb: 0.5 }}
+        sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.greyLight, display: 'block', mb: 0.5 }}
       >
         {label}
       </Typography>
       <Typography
         variant="body1"
         fontWeight={500}
-        sx={{ borderBottom: '1px solid rgba(255,255,255,0.1)', pb: 0.5 }}
+        sx={{ borderBottom: '1px solid', borderColor: 'divider', pb: 0.5 }}
       >
         {value}
       </Typography>
@@ -70,7 +71,7 @@ export function Public() {
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
           <FavoriteIcon sx={{ color: 'text.disabled', fontSize: 32, animation: 'pulse 1.5s ease-in-out infinite' }} />
-          <Skeleton variant="text" width={200} height={20} sx={{ bgcolor: 'rgba(255,255,255,0.1)' }} />
+          <Skeleton variant="text" width={200} height={20} sx={{ bgcolor: 'divider' }} />
           <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: 'text.disabled' }}>
             Loading Profile...
           </Typography>
@@ -98,7 +99,7 @@ export function Public() {
           <Typography
             variant="h2"
             fontWeight={900}
-            sx={{ background: 'linear-gradient(135deg, #fff, #666)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            sx={{ background: (theme) => `linear-gradient(135deg, #fff, ${theme.palette.custom.greyDark})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
             404
           </Typography>
@@ -134,7 +135,7 @@ export function Public() {
           left: 0,
           width: '100%',
           height: 500,
-          background: 'linear-gradient(to bottom, rgba(255,255,255,0.03), transparent)',
+          background: (theme) => `linear-gradient(to bottom, ${alpha(theme.palette.common.white, 0.03)}, transparent)`,
           pointerEvents: 'none',
         }}
       />
@@ -149,7 +150,7 @@ export function Public() {
           borderColor: 'divider',
           borderRadius: 3,
           overflow: 'hidden',
-          boxShadow: '0 0 50px rgba(255,255,255,0.04)',
+          boxShadow: (theme) => theme.palette.custom.glowShadow,
           position: 'relative',
           zIndex: 1,
         }}
@@ -161,7 +162,7 @@ export function Public() {
             p: { xs: 4, md: 6 },
             borderBottom: '1px solid',
             borderColor: 'divider',
-            bgcolor: 'rgba(0,0,0,0.4)',
+            bgcolor: (theme) => alpha(theme.palette.common.black, 0.4),
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
@@ -175,7 +176,7 @@ export function Public() {
               right: 0,
               width: 256,
               height: 256,
-              bgcolor: 'rgba(255,255,255,0.04)',
+              bgcolor: (theme) => theme.palette.custom.glassBg,
               borderRadius: '50%',
               filter: 'blur(60px)',
               transform: 'translate(50%, -50%)',
@@ -188,8 +189,9 @@ export function Public() {
               label="Miembro MiCuervo"
               size="small"
               sx={{
-                bgcolor: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.2)',
+                bgcolor: (theme) => theme.palette.custom.glassHoverBg,
+                border: '1px solid',
+                borderColor: (theme) => theme.palette.custom.glassBorder,
                 color: 'text.primary',
                 fontSize: 10,
                 letterSpacing: '0.2em',
@@ -215,7 +217,7 @@ export function Public() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
               <Typography
                 variant="caption"
-                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.35)', whiteSpace: 'nowrap' }}
+                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'text.secondary', whiteSpace: 'nowrap' }}
               >
                 Información Personal
               </Typography>
@@ -240,13 +242,13 @@ export function Public() {
                 <Typography
                   variant="caption"
                   component="dt"
-                  sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: '#555', display: 'block', mb: 1 }}
+                  sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.greyLight, display: 'block', mb: 1 }}
                 >
                   Información Extra
                 </Typography>
                 <Box
                   component="dd"
-                  sx={{ bgcolor: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 2, p: 2 }}
+                  sx={{ bgcolor: (theme) => theme.palette.custom.glassBg, border: '1px solid', borderColor: (theme) => alpha(theme.palette.common.white, 0.05), borderRadius: 2, p: 2 }}
                 >
                   <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
                     {profile.data.extraInfo}
@@ -261,17 +263,18 @@ export function Public() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
               <Typography
                 variant="caption"
-                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(239,83,80,0.6)', whiteSpace: 'nowrap' }}
+                sx={{ fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em', color: (theme) => alpha(theme.palette.error.main, 0.6), whiteSpace: 'nowrap' }}
               >
                 Contacto de Emergencia
               </Typography>
-              <Divider sx={{ flexGrow: 1, borderColor: 'rgba(239,83,80,0.2)' }} />
+              <Divider sx={{ flexGrow: 1, borderColor: (theme) => alpha(theme.palette.error.main, 0.2) }} />
             </Box>
 
             <Paper
               sx={{
-                background: 'linear-gradient(135deg, rgba(183,28,28,0.1), rgba(0,0,0,0.5))',
-                border: '1px solid rgba(183,28,28,0.15)',
+                background: (theme) => `linear-gradient(135deg, ${alpha(theme.palette.error.dark, 0.1)}, ${alpha(theme.palette.common.black, 0.5)})`,
+                border: '1px solid',
+                borderColor: (theme) => alpha(theme.palette.error.dark, 0.15),
                 borderRadius: 2,
                 p: 3,
                 position: 'relative',
@@ -280,7 +283,7 @@ export function Public() {
                   content: '""',
                   position: 'absolute',
                   inset: 0,
-                  bgcolor: 'rgba(239,83,80,0.04)',
+                  bgcolor: (theme) => alpha(theme.palette.error.main, 0.04),
                 },
               }}
             >
@@ -299,9 +302,9 @@ export function Public() {
         {/* Footer */}
         <Box
           component="footer"
-          sx={{ p: 3, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center', bgcolor: 'rgba(0,0,0,0.4)' }}
+          sx={{ p: 3, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center', bgcolor: (theme) => alpha(theme.palette.common.black, 0.4) }}
         >
-          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: '#444' }}>
+          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: (theme) => theme.palette.custom.greyMedium }}>
             Protegido por sistema MiCuervo
           </Typography>
         </Box>

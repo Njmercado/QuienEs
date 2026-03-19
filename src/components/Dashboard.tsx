@@ -134,7 +134,7 @@ export function Dashboard() {
         sx={{
           borderColor: 'divider',
           color: 'text.secondary',
-          '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'white', color: 'black' },
+          '&:hover': { borderColor: (theme) => theme.palette.custom.glassHoverBorder, bgcolor: 'background.paper', color: 'text.primary' },
         }}
       >
         Crear Perfil
@@ -164,7 +164,7 @@ export function Dashboard() {
               sx={{
                 borderColor: 'divider',
                 color: 'text.secondary',
-                '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'rgba(255,255,255,0.05)' },
+                '&:hover': { borderColor: (theme) => theme.palette.custom.glassHoverBorder, bgcolor: (theme) => theme.palette.custom.glassBg },
               }}
             >
               Salir
@@ -189,7 +189,7 @@ export function Dashboard() {
                   sx={{
                     borderColor: 'divider',
                     color: 'text.secondary',
-                    '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'white', color: 'black' },
+                    '&:hover': { borderColor: (theme) => theme.palette.custom.glassHoverBorder, bgcolor: 'background.paper', color: 'text.primary' },
                   }}
                 >
                   Visitar perfil publico

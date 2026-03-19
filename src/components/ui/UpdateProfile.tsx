@@ -9,6 +9,7 @@ import {
   Collapse,
   IconButton,
   Stack,
+  alpha,
 } from '@mui/material'
 import StarIcon from '@mui/icons-material/Star'
 import StarBorderIcon from '@mui/icons-material/StarBorder'
@@ -42,10 +43,10 @@ export function UpdateProfile({
       sx={{
         bgcolor: 'background.paper',
         border: '1px solid',
-        borderColor: localProfile.chosen ? 'rgba(234,179,8,0.5)' : 'divider',
+        borderColor: localProfile.chosen ? (theme) => alpha(theme.palette.warning.main, 0.5) : 'divider',
         borderRadius: 2,
         overflow: 'hidden',
-        boxShadow: localProfile.chosen ? '0 0 20px rgba(234,179,8,0.1)' : 'none',
+        boxShadow: localProfile.chosen ? (theme) => theme.palette.custom.goldGlow : 'none',
         transition: 'all 0.3s ease',
       }}
     >
@@ -60,7 +61,7 @@ export function UpdateProfile({
           justifyContent: 'space-between',
           alignItems: 'center',
           userSelect: 'none',
-          '&:hover': { bgcolor: 'rgba(255,255,255,0.03)' },
+          '&:hover': { bgcolor: (theme) => alpha(theme.palette.common.white, 0.03) },
           transition: 'background-color 0.2s',
         }}
       >
@@ -70,8 +71,8 @@ export function UpdateProfile({
               onClick={onChosen}
               size="small"
               sx={{
-                color: localProfile.chosen ? '#eab308' : 'text.disabled',
-                '&:hover': { color: '#eab308', transform: 'scale(1.1)' },
+                color: localProfile.chosen ? 'warning.main' : 'text.disabled',
+                '&:hover': { color: 'warning.main', transform: 'scale(1.1)' },
                 transition: 'all 0.2s',
               }}
               title={localProfile.chosen ? 'Current Profile' : 'Set as Current'}
@@ -84,7 +85,7 @@ export function UpdateProfile({
             <Typography
               variant="subtitle1"
               fontWeight={700}
-              sx={{ color: localProfile.chosen ? '#eab308' : 'text.primary', transition: 'color 0.2s' }}
+              sx={{ color: localProfile.chosen ? 'warning.main' : 'text.primary', transition: 'color 0.2s' }}
             >
               {localProfile.profile_title || 'Untitled Profile'}
             </Typography>

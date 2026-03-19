@@ -27,7 +27,7 @@ export const QRCard = () => {
         borderColor: 'divider',
         borderRadius: 3,
         p: 4,
-        boxShadow: '0 0 50px rgba(255,255,255,0.07)',
+        boxShadow: (theme) => theme.palette.custom.glowShadow,
       }}
     >
       <QR qrCode={qrCode} />

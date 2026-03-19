@@ -62,7 +62,7 @@ export function SideDrawer({ isOpen, onClose, children, title }: SideDrawerProps
           onClick={onClose}
           size="small"
           aria-label="Cerrar panel"
-          sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary', bgcolor: 'rgba(255,255,255,0.08)' } }}
+          sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary', bgcolor: (theme) => theme.palette.custom.glassHoverBg } }}
         >
           <CloseIcon fontSize="small" />
         </IconButton>

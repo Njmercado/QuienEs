@@ -1,4 +1,4 @@
-import { Box, Fab } from '@mui/material'
+import { Box, Fab, alpha } from '@mui/material'
 
 export interface FloatingButtonProps {
   children: React.ReactNode
@@ -37,7 +37,7 @@ export function FloatingButton({
           color: 'black',
           width: 64,
           height: 64,
-          boxShadow: '0 0 20px rgba(255,255,255,0.25)',
+          boxShadow: (theme) => `0 0 20px ${alpha(theme.palette.common.white, 0.25)}`,
           border: '4px solid black',
           '&:hover': {
             bgcolor: 'white',

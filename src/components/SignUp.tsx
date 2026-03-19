@@ -78,7 +78,7 @@ export function SignUp() {
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 3,
-            boxShadow: '0 0 50px rgba(255,255,255,0.07)',
+            boxShadow: (theme) => theme.palette.custom.glowShadow,
             p: 4,
             display: 'flex',
             flexDirection: 'column',
@@ -94,10 +94,11 @@ export function SignUp() {
               <Alert
                 severity="error"
                 sx={{
-                  bgcolor: 'rgba(211, 47, 47, 0.1)',
-                  border: '1px solid rgba(211, 47, 47, 0.3)',
-                  color: '#ef9a9a',
-                  '& .MuiAlert-icon': { color: '#ef9a9a' },
+                  bgcolor: (theme) => theme.palette.custom.errorBg,
+                  border: '1px solid',
+                  borderColor: (theme) => theme.palette.custom.errorBorder,
+                  color: (theme) => theme.palette.custom.errorLight,
+                  '& .MuiAlert-icon': { color: (theme) => theme.palette.custom.errorLight },
                 }}
               >
                 {error}
@@ -186,7 +187,7 @@ export function SignUp() {
             sx={{
               borderColor: 'divider',
               color: 'text.primary',
-              '&:hover': { borderColor: 'rgba(255,255,255,0.5)', bgcolor: 'rgba(255,255,255,0.04)' },
+              '&:hover': { borderColor: (theme) => theme.palette.custom.glassHoverBorder, bgcolor: (theme) => theme.palette.custom.glassBg },
             }}
           >
             Google
