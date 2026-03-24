@@ -1,8 +1,8 @@
-# Cuervo — Project Context for AI Assistants
+# QuienEs — Project Context for AI Assistants
 
 ## Overview
 
-**Cuervo** (also referred to internally as *MiCuervo*) is a QR-based emergency profile manager. Users create one or more medical/emergency profiles containing personal data (blood type, ID, health insurance) and emergency contact info. A single profile can be marked as "chosen" (active) and is publicly accessible via a scannable QR code at `/public/<user_id>`, requiring no authentication.
+**QuienEs** is a QR-based emergency profile manager. Users create one or more medical/emergency profiles containing personal data (blood type, ID, health insurance) and emergency contact info. A single profile can be marked as "chosen" (active) and is publicly accessible via a scannable QR code at `/public/<user_id>`, requiring no authentication.
 
 The target use case is personal emergency identification: someone scans the user's QR code (e.g., on a physical card or sticker) and immediately sees the relevant medical and emergency contact information.
 

@@ -2,7 +2,7 @@
   font-family: 'Roboto', 'Inter', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: dark;
+  color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -16,5 +16,17 @@
 body {
   min-width: 320px;
   min-height: 100vh;
-  background-color: #000000;
+  background-color: #EEEEF0;
+}
+
+a {
+  color: #006E2A;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+
+a:hover {
+  text-decoration: underline;
 }

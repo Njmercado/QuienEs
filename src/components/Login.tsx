@@ -4,13 +4,16 @@ import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
 import {
   Box,
-  Button,
-  TextField,
   Typography,
   Alert,
-  Divider,
   CircularProgress,
+  TextField,
+  InputLabel,
+  Button,
+  Card,
 } from '@mui/material'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 
 export function Login() {
   const navigate = useNavigate()
@@ -44,127 +47,145 @@ export function Login() {
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        px: 2,
-        bgcolor: 'background.default',
       }}
     >
-      {/* Logo / Brand */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1, mb: 4 }}>
-        <Box component="img" src="black.png" alt="crow simple image" sx={{ width: 80 }} />
-        <Typography
-          variant="h4"
-          fontWeight={900}
-          letterSpacing="-0.05em"
-          color="text.primary"
-        >
-          CUERVO
-        </Typography>
+      {/* Header Logo */}
+      <Box sx={{ p: { xs: 3, sm: 4 } }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {/* here should be the Logo */}
+          <Typography sx={{ fontWeight: 900, color: '#006E2A', fontSize: theme => theme.customSizes.font.lg }}>
+            QUIENES
+          </Typography>
+        </Box>
       </Box>
 
-      {/* Card */}
+      {/* Main Container */}
       <Box
         sx={{
-          width: '100%',
-          maxWidth: 440,
-          bgcolor: 'background.paper',
-          border: '1px solid',
-          borderColor: 'divider',
-          borderRadius: 3,
-          boxShadow: (theme) => theme.palette.custom.glowShadow,
-          p: 4,
+          flexGrow: 1,
           display: 'flex',
           flexDirection: 'column',
-          gap: 3,
+          justifyContent: 'center',
+          width: '100%',
+          maxWidth: 440,
+          mx: 'auto',
+          px: { xs: 3, sm: 0 },
         }}
       >
-        <Box
-          component="form"
-          onSubmit={handleLogin}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
-        >
-          {error && (
-            <Alert
-              severity="error"
-              sx={{
-                bgcolor: (theme) => theme.palette.custom.errorBg,
-                border: '1px solid',
-                borderColor: (theme) => theme.palette.custom.errorBorder,
-                color: (theme) => theme.palette.custom.errorLight,
-                '& .MuiAlert-icon': { color: (theme) => theme.palette.custom.errorLight },
-              }}
-            >
-              {error}
-            </Alert>
-          )}
-
-          <TextField
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            fullWidth
-            required
-            variant="standard"
-            InputLabelProps={{ sx: { textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' } }}
-          />
-
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            fullWidth
-            required
-            variant="standard"
-            InputLabelProps={{ sx: { textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' } }}
-          />
-
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={loading}
-            size="large"
-            sx={{ py: 1.8 }}
-            startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
+        {/* Title Section */}
+        <Box sx={{ mb: 4 }}>
+          <Box sx={{ width: 32, height: 3, bgcolor: theme => theme.palette.divider, mb: 2 }} />
+          <Typography
+            variant="h2"
+            sx={{
+              fontWeight: 800,
+              color: theme => theme.palette.text.primary,
+              fontSize: { xs: 40, sm: 48 },
+              lineHeight: 1.1,
+              mb: 1.5,
+              letterSpacing: '-0.04em',
+            }}
           >
-            {loading ? 'Signing In...' : 'Sign In'}
-          </Button>
+            Iniciar
+            <br />
+            Sesión
+          </Typography>
         </Box>
 
-        <Divider sx={{ '&::before, &::after': { borderColor: 'divider' } }}>
-          <Typography variant="caption" color="text.secondary" sx={{ letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Or continue with
-          </Typography>
-        </Divider>
-
-        <Button
-          variant="outlined"
-          fullWidth
-          sx={{
-            borderColor: 'divider',
-            color: 'text.primary',
-            '&:hover': { borderColor: (theme) => theme.palette.custom.glassHoverBorder, bgcolor: (theme) => theme.palette.custom.glassBg },
-          }}
-        >
-          Google
-        </Button>
-
-        <Typography variant="caption" color="text.secondary" align="center">
-          Don't have an account?{' '}
+        {/* Form Card */}
+        <Card sx={{ p: { xs: 3, sm: 4 }, mb: 4 }}>
           <Box
+            component="form"
+            onSubmit={handleLogin}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: theme => theme.size(6),
+            }}
+          >
+            {error && (
+              <Alert
+                severity="error"
+                sx={{
+                  bgcolor: (theme) => theme.palette.custom?.errorBg || 'error.light',
+                  color: (theme) => theme.palette.custom?.errorLight || 'error.main',
+                }}
+              >
+                {error}
+              </Alert>
+            )}
+
+            <Box>
+              <InputLabel shrink htmlFor="email-input">EMAIL *</InputLabel>
+              <TextField
+                id="email-input"
+                fullWidth
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="nombre@ejemplo.com"
+                required
+              />
+            </Box>
+
+            <Box>
+              <InputLabel shrink htmlFor="password-input">PASSWORD *</InputLabel>
+              <TextField
+                id="password-input"
+                fullWidth
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </Box>
+
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              disabled={loading}
+              endIcon={!loading ? <ArrowForwardIcon sx={{ fontSize: theme => theme.customSizes.font.base }} /> : undefined}
+              sx={{ mt: 2 }}
+            >
+              {loading ? <CircularProgress size={24} color="inherit" /> : 'Iniciar Sesión'}
+            </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+              <Typography
+                component={Link}
+                to="#"
+                sx={{
+                  fontSize: theme => theme.customSizes.font.small,
+                  fontWeight: 700,
+                  color: '#888',
+                  textDecoration: 'none',
+                  letterSpacing: '0.05em',
+                  '&:hover': { color: '#555' }
+                }}
+              >
+                ¿OLVIDASTE TU CONTRASEÑA?
+              </Typography>
+            </Box>
+          </Box>
+        </Card>
+
+        {/* Footer actions */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mb: 6 }}>
+          <Typography sx={{ fontSize: theme => theme.customSizes.font.base, color: '#666' }}>
+            ¿No tienes una cuenta aún?
+          </Typography>
+          <Button
             component={Link}
             to="/signup"
-            sx={{ color: 'text.primary', textDecoration: 'underline', '&:hover': { color: 'text.secondary' } }}
+            endIcon={<PersonAddAltIcon sx={{ fontSize: theme => theme.customSizes.font.lg }} />}
+            variant='contained'
+            color='secondary'
           >
-            Sign up
-          </Box>
-        </Typography>
+            Crear Cuenta
+          </Button>
+        </Box>
       </Box>
     </Box>
   )

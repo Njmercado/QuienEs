@@ -24,7 +24,7 @@ function InfoField({ label, value }: InfoFieldProps) {
     <Box>
       <Typography
         variant="caption"
-        sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.greyLight, display: 'block', mb: 0.5 }}
+        sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.neutralLight, display: 'block', mb: 0.5 }}
       >
         {label}
       </Typography>
@@ -99,7 +99,7 @@ export function Public() {
           <Typography
             variant="h2"
             fontWeight={900}
-            sx={{ background: (theme) => `linear-gradient(135deg, #fff, ${theme.palette.custom.greyDark})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            sx={{ background: (theme) => `linear-gradient(135deg, #fff, ${theme.palette.custom.neutralDark})`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
           >
             404
           </Typography>
@@ -242,7 +242,7 @@ export function Public() {
                 <Typography
                   variant="caption"
                   component="dt"
-                  sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.greyLight, display: 'block', mb: 1 }}
+                  sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', fontWeight: 700, color: (theme) => theme.palette.custom.neutralLight, display: 'block', mb: 1 }}
                 >
                   Información Extra
                 </Typography>
@@ -304,7 +304,7 @@ export function Public() {
           component="footer"
           sx={{ p: 3, borderTop: '1px solid', borderColor: 'divider', textAlign: 'center', bgcolor: (theme) => alpha(theme.palette.common.black, 0.4) }}
         >
-          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: (theme) => theme.palette.custom.greyMedium }}>
+          <Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: '0.15em', color: (theme) => theme.palette.custom.neutralMedium }}>
             Protegido por sistema MiCuervo
           </Typography>
         </Box>
