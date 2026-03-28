@@ -4,6 +4,7 @@ import { type Profile as ProfileType } from '../../objects/profile'
 import { Box, Button } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { useAuth } from '../../contexts/AuthContext'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const EMPTY_PROFILE: ProfileType = {
   id: '',
@@ -27,9 +28,10 @@ const EMPTY_PROFILE: ProfileType = {
 interface ProfileProps {
   onSave: (profile: ProfileType) => void
   profile?: ProfileType
+  onDelete?: (id: string) => void
 }
 
-export function Profile({ onSave, profile }: ProfileProps) {
+export function Profile({ onSave, profile, onDelete }: ProfileProps) {
   const { user } = useAuth()
   const [localProfile, setLocalProfile] = useState<ProfileType>(profile || EMPTY_PROFILE)
 
@@ -42,8 +44,8 @@ export function Profile({ onSave, profile }: ProfileProps) {
   }
 
   const handleSave = () => {
-    if (!profile) return
-    onSave(profile)
+    if (!localProfile) return
+    onSave(localProfile)
   }
 
   return (
@@ -52,17 +54,37 @@ export function Profile({ onSave, profile }: ProfileProps) {
         profile={localProfile}
         onUpdate={onUpdate}
       />
-      <Button
-        onClick={handleSave}
-        variant="contained"
-        color="primary"
-        fullWidth
-        size="large"
-        startIcon={<AddCircleOutlineIcon />}
-        sx={{ py: 1.8 }}
-      >
-        Crear perfil
-      </Button>
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+
+        {
+          localProfile.id && (
+            <Button
+              onClick={() => onDelete?.(localProfile.id)}
+              variant="contained"
+              color="error"
+              fullWidth
+              size="large"
+              startIcon={<DeleteIcon />}
+              sx={{ py: 1.8 }}
+            >
+              Eliminar perfil
+            </Button>
+          )
+        }
+        <Button
+          onClick={handleSave}
+          variant="contained"
+          color="primary"
+          fullWidth
+          size="large"
+          startIcon={<AddCircleOutlineIcon />}
+          sx={{ py: 1.8 }}
+        >
+          {
+            localProfile.id ? 'Actualizar perfil' : 'Crear perfil'
+          }
+        </Button>
+      </Box>
     </Box>
   )
 }

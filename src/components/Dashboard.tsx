@@ -7,33 +7,31 @@ import { useEffect, useState } from 'react'
 import { Profile } from './ui/Profile'
 import toast from 'react-hot-toast'
 import { SideDrawer } from './ui/SideDrawer'
+import { ProfileCard } from './ui/ProfileCard'
 import {
   Box,
   Button,
-  Stack,
   Typography,
   useTheme,
   Card,
   CardContent,
-  CardActionArea,
   Paper,
-  Divider,
-  Chip,
+  Grid
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import MenuIcon from '@mui/icons-material/Menu'
-import EditIcon from '@mui/icons-material/Edit'
-import ShareIcon from '@mui/icons-material/Share'
-import ShieldIcon from '@mui/icons-material/Shield'
 import { useQR } from '../hooks/useQR'
+import { EmptyProfile } from './ui/EmptyProfiles'
+import { ProfileChosenCard } from './ui/ProfileChosenCard'
 
 export function Dashboard() {
-  const [showNewProfileDrawer, setShowNewProfileDrawer] = useState(false)
+  const [openProfileDrawer, setOpenProfileDrawer] = useState(false)
   const { qrCode, generateQR } = useQR()
   const { user } = useAuth()
   const navigate = useNavigate()
   const theme = useTheme()
   const { profiles, loadProfiles, removeProfile, chooseProfile } = useProfiles()
+  const [editingProfile, setEditingProfile] = useState<ProfileType>()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -128,7 +126,7 @@ export function Dashboard() {
   const createNewProfileButton = () => {
     return (
       <Button
-        onClick={() => setShowNewProfileDrawer(true)}
+        onClick={() => setOpenProfileDrawer(true)}
         variant="contained"
         size="small"
         startIcon={<AddIcon />}
@@ -141,7 +139,21 @@ export function Dashboard() {
     )
   }
 
-  const perfilPrinfipal = profiles.find((p) => p.chosen);
+  const handleOnCloseDrawer = () => {
+    setEditingProfile(undefined)
+    setOpenProfileDrawer(false)
+  }
+
+  const handleShareProfile = (id: string) => {
+    window.open(`/public/${id}`, '_blank');
+  }
+
+  const mainProfile = profiles.find((p) => p.chosen);
+  const otherProfiles = profiles.filter((p) => !p.chosen);
+
+  if (profiles.length === 0 || !mainProfile || !otherProfiles) {
+    return <EmptyProfile />
+  }
 
   return (
     <Box component="main">
@@ -170,44 +182,19 @@ export function Dashboard() {
         </Box>
 
         {/* Profile content*/}
-
         <Box>
           {/* MAIN PROFILE */}
           <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 2 }}>
-            <Card sx={{ position: 'relative' }}>
-              <CardContent>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2 }}>
-                  <Paper sx={{ p: 3, borderRadius: 4, bgcolor: theme.palette.custom.accent, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <ShieldIcon sx={{ fontSize: theme.customSizes.font.h1, color: theme.palette.custom.accentDark }} />
-                  </Paper>
-                  <Chip label="Perfil Principal Acivado" color="success" />
-                </Box>
-                <Box mt={10}>
-                  <Typography variant="h3" sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>
-                    Perfil Principal
-                  </Typography>
-                  <Typography variant='h6' sx={{ maxWidth: '50%', wordBreak: 'break-word', mt: 2 }}>
-                    Este es el perfil configurado para situaciones de emergencia críticas. Incluye contactos de red primaria.
-                  </Typography>
-                </Box>
-              </CardContent>
-              <Divider sx={{ borderColor: theme.palette.custom.neutralLight, }} />
-              <CardActionArea sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
-                <Box>
-                  <Button variant='text' sx={{ color: theme.palette.custom.accentDark, gap: 1 }}>
-                    <EditIcon />
-                    <span>Editar</span>
-                  </Button>
-                  <Button variant='text' sx={{ color: theme.palette.custom.neutralDark, gap: 1 }}>
-                    <ShareIcon />
-                    <span>Compartir</span>
-                  </Button>
-                </Box>
-                <Typography>
-                  ULTIMA MODIFICACION: {new Date().toLocaleDateString()}
-                </Typography>
-              </CardActionArea>
-            </Card>
+            <ProfileChosenCard
+              profile={mainProfile}
+              onEdit={(profile: ProfileType) => {
+                setEditingProfile(profile)
+                setOpenProfileDrawer(true)
+              }}
+              onShare={(id: string) => {
+                handleShareProfile(id)
+              }}
+            />
 
             {/* QR INFORMATION AND BAND ID */}
             <Card sx={{ bgcolor: theme.palette.custom.accentDark }}>
@@ -226,27 +213,39 @@ export function Dashboard() {
           </Box>
         </Box>
 
-        {/* <Stack component="section" spacing={2} aria-label="Profiles List">
-          {profiles.map((profile) => (
-            <UpdateProfile
-              key={profile.id}
-              profile={profile}
-              expand={false}
-              onChosen={(e) => { e.stopPropagation(); updateChosenStatus(profile.id, profile) }}
-              onDelete={(e) => { e.stopPropagation(); handleDeleteProfile(profile.id) }}
-              onSave={(updatedProfile) => updateProfile(updatedProfile)}
-            />
+        <Grid container columns={12} spacing={2} aria-label="Profiles List" mt={4}>
+          {otherProfiles.map((profile) => (
+            <Grid key={profile.id} size={{ xs: 12, sm: 6, md: 4, lg: 6 }}>
+              <ProfileCard
+                profile={profile}
+                onEdit={(profile: ProfileType) => {
+                  setEditingProfile(profile)
+                  setOpenProfileDrawer(true)
+                }}
+                onDelete={(id: string) => handleDeleteProfile(id)}
+                onSelect={(id: string) => updateChosenStatus(id, profile)}
+              />
+            </Grid>
           ))}
-        </Stack> */}
+        </Grid>
       </Box>
 
       {/* Profile Drawer */}
-      <SideDrawer isOpen={showNewProfileDrawer} onClose={() => setShowNewProfileDrawer(false)} title="Nuevo Perfil">
+      <SideDrawer isOpen={openProfileDrawer} onClose={handleOnCloseDrawer} title="Nuevo Perfil">
         <Profile
-          onSave={(newProfile: ProfileType) => {
-            createProfile(newProfile)
-            setShowNewProfileDrawer(false)
+          onSave={(profile: ProfileType) => {
+            if (profile.id) {
+              updateProfile(profile)
+            } else {
+              createProfile(profile)
+            }
+            handleOnCloseDrawer()
           }}
+          onDelete={(id: string) => {
+            handleDeleteProfile(id)
+            handleOnCloseDrawer()
+          }}
+          profile={editingProfile}
         />
       </SideDrawer>
     </Box>

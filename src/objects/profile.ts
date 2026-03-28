@@ -19,6 +19,8 @@ export interface Profile {
   profile_title?: string
   profile_description?: string
   data?: ProfileData
-  isExpanded?: boolean
   chosen?: boolean
+  created_at?: string
+  updated_at?: string
+  user_id?: string
 }
