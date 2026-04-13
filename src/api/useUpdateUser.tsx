@@ -18,6 +18,8 @@ export function useUpdateUser() {
         sex: user.sex,
         personal_phone_number: user.personal_phone_number,
         personal_phone_indicative: user.personal_phone_indicative,
+        id_type: user.id_type,
+        id_number: user.id_number,
       })
       .eq('user_id', authUser?.id)
       .eq('id', user.id)

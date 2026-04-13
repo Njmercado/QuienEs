@@ -6,6 +6,8 @@ export interface User {
   sex: string
   personal_phone_number: string
   personal_phone_indicative: string
+  id_type: string
+  id_number: string
 }
 
 export interface UserDTO extends User {

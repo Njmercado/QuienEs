@@ -8,7 +8,7 @@ export function useUpdateProfile() {
 
   const updateProfile = async (profile: ProfileType) => {
     const { error } = await supabase
-      .from('PublicUser')
+      .from('Profile')
       .update({
         profile_description: profile.profile_description,
         profile_title: profile.profile_title,

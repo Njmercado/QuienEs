@@ -42,6 +42,23 @@ export function UpdateUserSettings() {
       </Grid>
       <Grid size={{ xs: 12, sm: 6 }}>
         <FormSelect
+          label="Tipo de Documento"
+          name="id_type"
+          value={form?.id_type}
+          onChange={(e) => handleChange('id_type', e.target.value)}
+          options={['CC', 'CE', 'PAS', 'TI']}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormInput
+          label="Número de Documento"
+          name="id_number"
+          value={form?.id_number}
+          onChange={(e) => handleChange('id_number', e.target.value)}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormSelect
           label="Tipo de Sangre"
           name="rh"
           value={form?.rh}

@@ -7,7 +7,7 @@ export function useDeleteProfile() {
 
   const deleteProfile = async (id: string) => {
     const { error } = await supabase
-      .from('PublicUser')
+      .from('Profile')
       .delete()
       .eq('id', id)
       .eq('user_id', user?.id)

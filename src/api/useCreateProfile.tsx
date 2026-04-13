@@ -7,7 +7,7 @@ export function useCreateProfile() {
   const { user } = useAuth()
 
   const createProfile = async (profile: ProfileType) => {
-    const { error } = await supabase.from('PublicUser').insert({
+    const { error } = await supabase.from('Profile').insert({
       profile_description: profile.profile_description,
       profile_title: profile.profile_title,
       data: profile.data,

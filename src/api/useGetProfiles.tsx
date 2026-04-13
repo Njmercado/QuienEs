@@ -5,7 +5,7 @@ export function useGetProfiles() {
   const { user } = useAuth()
 
   const getProfiles = async () => {
-    const { data, error } = await supabase.from('PublicUser').select('*').eq('user_id', user?.id)
+    const { data, error } = await supabase.from('Profile').select('*').eq('user_id', user?.id)
     if (error) {
       throw error
     }
