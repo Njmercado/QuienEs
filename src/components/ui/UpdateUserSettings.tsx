@@ -3,15 +3,15 @@ import { FormInput } from "./FormInput"
 import { FormSelect } from "./FormSelect"
 import { useGetUser, useUpdateUser } from "../../api"
 import { useState, useEffect } from "react"
-import type { UserData } from "../../objects/user"
+import type { User } from "../../objects/user"
 
 export function UpdateUserSettings() {
   const { getUser } = useGetUser()
   const { updateUser } = useUpdateUser()
-  const [form, setForm] = useState<UserData | null>(null)
+  const [form, setForm] = useState<User | null>(null)
 
   const handleChange = (name: string, value: string) => {
-    setForm({ ...form, [name]: value } as UserData)
+    setForm({ ...form, [name]: value } as User)
   }
 
   useEffect(() => {
@@ -75,6 +75,22 @@ export function UpdateUserSettings() {
           options={['Masculino', 'Femenino', 'Otro']}
         />
       </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormInput
+          label="Lugar de Nacimiento"
+          name="from"
+          value={form?.from}
+          onChange={(e) => handleChange('from', e.target.value)}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6 }}>
+        <FormInput
+          label="Vivo en"
+          name="living_in"
+          value={form?.living_in}
+          onChange={(e) => handleChange('living_in', e.target.value)}
+        />
+      </Grid>
       <Grid size={2}>
         <FormInput
           label="Indicativo"
@@ -94,7 +110,7 @@ export function UpdateUserSettings() {
       <Grid size={12} display='flex' justifyContent='flex-end'>
         <Button
           variant="contained"
-          onClick={() => updateUser(form as UserData)}
+          onClick={() => updateUser(form as User)}
         >
           Actualizar
         </Button>

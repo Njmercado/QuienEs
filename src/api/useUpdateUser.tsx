@@ -1,12 +1,12 @@
-import type { UserDTO } from "../objects/user"
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import toast from 'react-hot-toast'
+import type { User } from '../objects/user'
 
 export function useUpdateUser() {
   const { user: authUser } = useAuth()
 
-  const updateUser = async (user: UserDTO) => {
+  const updateUser = async (user: User) => {
     console.log(user)
     const { error } = await supabase
       .from('User')
@@ -20,6 +20,8 @@ export function useUpdateUser() {
         personal_phone_indicative: user.personal_phone_indicative,
         id_type: user.id_type,
         id_number: user.id_number,
+        living_in: user.living_in,
+        from: user.from,
       })
       .eq('user_id', authUser?.id)
       .eq('id', user.id)
