@@ -19,16 +19,17 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import { useQR } from '../hooks/useQR'
 import { ProfileChosenCard } from './ui/ProfileChosenCard'
-import { 
-  useGetProfilesQuery, 
-  useCreateProfileMutation, 
-  useUpdateProfileMutation, 
-  useUpdateChosenStatusMutation, 
-  useDeleteProfileMutation, 
-  useUpdatePublicProfileMutation 
+import {
+  useGetProfilesQuery,
+  useCreateProfileMutation,
+  useUpdateProfileMutation,
+  useUpdateChosenStatusMutation,
+  useDeleteProfileMutation,
+  useUpdatePublicProfileMutation
 } from '../store/endpoints/profilesApi'
 import { EmptyState } from './ui/EmptyState'
 import ShareIcon from '@mui/icons-material/Share'
+import { ROUTES } from '../constants'
 
 export function ProfilesView() {
   const [openProfileDrawer, setOpenProfileDrawer] = useState(false)
@@ -98,7 +99,7 @@ export function ProfilesView() {
   }
 
   const handleShareProfile = (id: string) => {
-    window.open(`/p/${id}`, '_blank');
+    window.open(`${ROUTES.PUBLIC}/${id}`, '_blank');
   }
 
   const mainProfile = profiles.find((p) => p.chosen);

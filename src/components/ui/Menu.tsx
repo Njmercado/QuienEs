@@ -14,14 +14,13 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../contexts/AuthContext'
+import { ROUTES } from '../../constants'
 
 export interface MenuOption {
   label: string
   icon: React.ReactNode
   action: () => void
 }
-
-
 
 export function Menu() {
   const theme = useTheme()
@@ -32,27 +31,27 @@ export function Menu() {
     {
       label: 'Mis Perfiles',
       icon: <PersonIcon />,
-      action: () => { navigate('/dashboard') }
+      action: () => { navigate(ROUTES.DASHBOARD) }
     },
     {
       label: 'SOS Contactos',
       icon: <PersonIcon />,
-      action: () => { navigate('/dashboard/sos-contact') }
+      action: () => { navigate(`${ROUTES.DASHBOARD}/${ROUTES.SOS_CONTACTS}`) }
     },
     {
       label: 'Condiciones',
       icon: <PersonIcon />,
-      action: () => { navigate('/dashboard/conditions') }
+      action: () => { navigate(`${ROUTES.DASHBOARD}/${ROUTES.CONDITION}`) }
     },
     {
       label: 'Historial de Emergencias',
       icon: <PersonIcon />,
-      action: () => { navigate('/dashboard/emergency-history') }
+      action: () => { navigate(`${ROUTES.DASHBOARD}/${ROUTES.EMERGENCY_HISTORY}`) }
     },
     {
       label: 'Ajustes',
       icon: <PersonIcon />,
-      action: () => { navigate('/dashboard/settings') }
+      action: () => { navigate(`${ROUTES.DASHBOARD}/${ROUTES.SETTINGS}`) }
     },
   ]
 

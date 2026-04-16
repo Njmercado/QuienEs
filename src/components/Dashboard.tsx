@@ -11,6 +11,7 @@ import { ProfilesView } from './ProfilesView'
 import { Conditions } from './Conditions'
 import { Settings } from './Settings'
 import { UnderConstruction } from './ui/UnderConstruction'
+import { ROUTES } from '../constants'
 
 export function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false)
@@ -39,20 +40,21 @@ export function Dashboard() {
         {/* Content */}
         <Routes>
           <Route path="/" element={<ProfilesView />} />
+          <Route path={ROUTES.PROFILE} element={<ProfilesView />} />
           <Route
-            path="/sos-contact"
+            path={ROUTES.SOS_CONTACTS}
             element={<SOSContacts />}
           />
           <Route
-            path="/conditions"
+            path={ROUTES.CONDITION}
             element={<Conditions />}
           />
           <Route
-            path="/settings"
+            path={ROUTES.SETTINGS}
             element={<Settings />}
           />
           <Route
-            path="/emergency-history"
+            path={ROUTES.EMERGENCY_HISTORY}
             element={<UnderConstruction />}
           />
         </Routes>

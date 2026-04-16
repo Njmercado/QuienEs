@@ -25,6 +25,7 @@ import LoginIcon from '@mui/icons-material/Login'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { useNavigate } from 'react-router-dom'
 import { useCreateUserMutation } from '../store/endpoints/usersApi'
+import { ROUTES } from '../constants'
 
 export function SignUp() {
   const navigate = useNavigate()
@@ -65,7 +66,7 @@ export function SignUp() {
         email,
         password,
         options: {
-          data: { display_name: name, phone_number: '1025' },
+          data: { display_name: name },
         },
       })
       if (error) throw error
@@ -88,7 +89,7 @@ export function SignUp() {
       }).unwrap()
 
       toast.success('User created successfully')
-      navigate('/dashboard')
+      navigate(ROUTES.DASHBOARD)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An error occurred'
       setError(message)

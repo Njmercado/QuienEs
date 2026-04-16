@@ -14,6 +14,7 @@ import {
 } from '@mui/material'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
+import { ROUTES } from '../constants'
 
 export function Login() {
   const navigate = useNavigate()
@@ -30,7 +31,7 @@ export function Login() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) throw error
-      navigate('/dashboard')
+      navigate(ROUTES.DASHBOARD)
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An error occurred'
       setError(message)
