@@ -3,7 +3,7 @@ import { Menu, MenuItem, Paper, Card, CardContent, CardActionArea, Typography, B
 import type { Profile } from "../../objects/profile"
 import ShieldIcon from '@mui/icons-material/Shield'
 import EditIcon from '@mui/icons-material/Edit'
-import AutoRenewIcon from '@mui/icons-material/AutoRenew'
+import AutorenewIcon from '@mui/icons-material/Autorenew'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useTheme } from '@mui/material/styles'
@@ -90,7 +90,7 @@ export function ProfileCard({ profile, onEdit, onDelete, onSelect }: ProfileCard
       </CardContent>
       <CardActionArea sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: 2, px: 2 }}>
         <Button variant="text" color="success" onClick={() => onSelect?.(profile.id)}>
-          <AutoRenewIcon />
+          <AutorenewIcon />
           <span>Activar este perfil</span>
         </Button>
       </CardActionArea>
