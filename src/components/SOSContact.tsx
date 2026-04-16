@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -13,41 +13,31 @@ import { Modal } from './ui/Modal'
 import { SOSContactCard } from './ui/SOSContactCard'
 import { SOSContactForm } from './ui/SOSContactForm'
 import { SOSContactSearch } from './ui/SOSContactSearch'
-import { useGetSOSContacts, useCreateSOSContact, useUpdateSOSContact, useDeleteSOSContact } from '../api'
+import { 
+  useGetSOSContactsQuery, 
+  useCreateSOSContactMutation, 
+  useUpdateSOSContactMutation, 
+  useDeleteSOSContactMutation 
+} from '../store/endpoints/sosContactsApi'
 import type { SOSContact, SOSContactData } from '../objects/sosContact'
 import { EmptyState } from './ui/EmptyState'
 
 export function SOSContacts() {
   const theme = useTheme()
-  const [contacts, setContacts] = useState<SOSContact[]>([])
   const [editingContact, setEditingContact] = useState<SOSContact | undefined>(undefined)
   const [deletingId, setDeletingId] = useState<string | undefined>(undefined)
   const [openDrawer, setOpenDrawer] = useState(false)
-
-  const { getSOSContacts } = useGetSOSContacts()
-  const { createSOSContact } = useCreateSOSContact()
-  const { updateSOSContact } = useUpdateSOSContact()
-  const { deleteSOSContact } = useDeleteSOSContact()
-
-  const loadContacts = async (search?: string, relationship?: string) => {
-    try {
-      const filters = {
-        ...(search ? { search } : {}),
-        ...(relationship ? { relationship } : {}),
-      }
-      const data = await getSOSContacts(Object.keys(filters).length > 0 ? filters : undefined)
-      setContacts(data ?? [])
-    } catch {
-      toast.error('Error al cargar los contactos de emergencia')
-    }
-  }
-
-  useEffect(() => {
-    loadContacts()
-  }, [])
+  const [searchFilter, setSearchFilter] = useState<{search?: string, relationship?: string}>({})
+  const { data: contacts = [] } = useGetSOSContactsQuery(searchFilter, { skip: Object.keys(searchFilter).length === 0 ? false : undefined })
+  const [createSOSContact] = useCreateSOSContactMutation()
+  const [updateSOSContact] = useUpdateSOSContactMutation()
+  const [deleteSOSContact] = useDeleteSOSContactMutation()
 
   const handleSearch = (query: string, relationship: string) => {
-    loadContacts(query || undefined, relationship || undefined)
+    setSearchFilter({
+      ...(query ? { search: query } : {}),
+      ...(relationship ? { relationship } : {}),
+    })
   }
 
   const handleOpenCreate = () => {
@@ -66,20 +56,25 @@ export function SOSContacts() {
   }
 
   const handleSave = async (data: SOSContactData | SOSContact) => {
-    if ('id' in data) {
-      await updateSOSContact(data as SOSContact)
-    } else {
-      await createSOSContact(data as SOSContactData)
+    try {
+      if ('id' in data) {
+        await updateSOSContact(data as SOSContact).unwrap()
+        toast.success(`Contacto "${data.name}" actualizado`)
+      } else {
+        await createSOSContact(data as SOSContactData).unwrap()
+        toast.success(`Contacto "${data.name}" guardado`)
+      }
+      handleCloseDrawer()
+    } catch {
+      toast.error('Error al guardar el contacto')
     }
-    handleCloseDrawer()
-    loadContacts()
   }
 
   const handleDeleteConfirm = async () => {
     if (!deletingId) return
     try {
-      await deleteSOSContact(deletingId)
-      setContacts((prev) => prev.filter((c) => c.id !== deletingId))
+      await deleteSOSContact(deletingId).unwrap()
+      toast.success('Contacto eliminado')
     } catch {
       toast.error('Error al eliminar el contacto')
     } finally {

@@ -1,5 +1,5 @@
 import { useAuth } from '../contexts/AuthContext'
-import { useProfiles } from '../hooks/useProfiles'
+
 import { type Profile as ProfileType } from '../objects/profile'
 import { useEffect, useState } from 'react'
 import { Profile } from './ui/Profile'
@@ -19,7 +19,14 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import { useQR } from '../hooks/useQR'
 import { ProfileChosenCard } from './ui/ProfileChosenCard'
-import { useGetProfiles, useCreateProfile, useUpdateProfile, useUpdateChosenStatus, useDeleteProfile, useUpdatePublicProfile } from '../api'
+import { 
+  useGetProfilesQuery, 
+  useCreateProfileMutation, 
+  useUpdateProfileMutation, 
+  useUpdateChosenStatusMutation, 
+  useDeleteProfileMutation, 
+  useUpdatePublicProfileMutation 
+} from '../store/endpoints/profilesApi'
 import { EmptyState } from './ui/EmptyState'
 import ShareIcon from '@mui/icons-material/Share'
 
@@ -28,38 +35,30 @@ export function ProfilesView() {
   const { qrCode, generateQR } = useQR()
   const { user } = useAuth()
   const theme = useTheme()
-  const { profiles, loadProfiles, removeProfile, chooseProfile } = useProfiles()
+  const { data: profiles = [] } = useGetProfilesQuery()
   const [editingProfile, setEditingProfile] = useState<ProfileType>()
-  const { getProfiles } = useGetProfiles()
-  const { createProfile } = useCreateProfile()
-  const { updateProfile } = useUpdateProfile()
-  const { updateChosenStatus } = useUpdateChosenStatus()
-  const { deleteProfile } = useDeleteProfile()
-  const { updatePublicProfile } = useUpdatePublicProfile()
-
-  const reloadProfiles = async () => {
-    if (!user) return
-    const profiles = await getProfiles()
-    loadProfiles(profiles)
-  }
+  const [createProfile] = useCreateProfileMutation()
+  const [updateProfile] = useUpdateProfileMutation()
+  const [updateChosenStatus] = useUpdateChosenStatusMutation()
+  const [deleteProfile] = useDeleteProfileMutation()
+  const [updatePublicProfile] = useUpdatePublicProfileMutation()
 
   useEffect(() => {
     generateQR(user?.id)
-    reloadProfiles()
-  }, [])
+  }, [user?.id, generateQR])
 
   const handleCreateProfile = async (profile: ProfileType) => {
     if (profiles.length == 0) {
       profile.chosen = true
     }
-    await createProfile(profile)
-    reloadProfiles()
+    await createProfile(profile).unwrap()
+    toast.success(`Perfil ${profile.profile_title} guardado`)
   }
 
   const handleUpdateChosenStatus = async (id: string, currentChosenProfileId?: string) => {
-    await updateChosenStatus(id, currentChosenProfileId)
-    await updatePublicProfile()
-    chooseProfile(id)
+    await updateChosenStatus({ id, currentChosenProfileId }).unwrap()
+    await updatePublicProfile().unwrap()
+    toast.success('Perfil actualizado')
   }
 
   const handleDeleteProfile = async (id: string) => {
@@ -70,8 +69,7 @@ export function ProfilesView() {
     }
 
     try {
-      await deleteProfile(id)
-      removeProfile(id)
+      await deleteProfile(id).unwrap()
       toast.success('Perfil eliminado')
     } catch (error) {
       toast.error(error as string)
@@ -202,9 +200,9 @@ export function ProfilesView() {
         <Profile
           onSave={(profile: ProfileType) => {
             if (profile.id) {
-              updateProfile(profile)
+              updateProfile(profile).unwrap().then(() => toast.success(`Perfil ${profile.profile_title} actualizado`)).catch((err) => toast.error(err.data || 'Error updating profile'))
             } else {
-              handleCreateProfile(profile)
+              handleCreateProfile(profile).catch((err) => toast.error(err.data || 'Error creating profile'))
             }
             handleOnCloseDrawer()
           }}

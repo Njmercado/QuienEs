@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Card } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { useGetMedicalConditions } from '../../api'
+import { useGetMedicalConditionsQuery } from '../../store/endpoints/medicalConditionsApi'
 import type { Condition } from '../../objects/condition'
 import type { Profile } from '../../objects/profile'
 
@@ -26,21 +25,7 @@ interface LightMedicalConditionCardProps {
  * @returns A React component.
  */
 export function ProfileMedicalConditions({ form, setForm }: ProfileMedicalConditionsProps) {
-  const { getConditions } = useGetMedicalConditions()
-  const [conditions, setConditions] = useState<Condition[]>([])
-
-  useEffect(() => {
-    async function fetchConditions() {
-      try {
-        const data = await getConditions()
-        console.log('CONDITIONS: ', data)
-        if (data) setConditions(data)
-      } catch (err) {
-        console.error('Error fetching conditions', err)
-      }
-    }
-    fetchConditions()
-  }, [])
+  const { data: conditions = [] } = useGetMedicalConditionsQuery()
 
   const selectedIds = form.medical_conditions || []
 

@@ -1,13 +1,14 @@
 import { Button, Grid } from "@mui/material"
 import { FormInput } from "./FormInput"
 import { FormSelect } from "./FormSelect"
-import { useGetUser, useUpdateUser } from "../../api"
+import { useGetUserQuery, useUpdateUserMutation } from "../../store/endpoints/usersApi"
 import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 import type { User } from "../../objects/user"
 
 export function UpdateUserSettings() {
-  const { getUser } = useGetUser()
-  const { updateUser } = useUpdateUser()
+  const { data: user } = useGetUserQuery()
+  const [updateUser] = useUpdateUserMutation()
   const [form, setForm] = useState<User | null>(null)
 
   const handleChange = (name: string, value: string) => {
@@ -15,12 +16,10 @@ export function UpdateUserSettings() {
   }
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getUser()
+    if (user) {
       setForm(user)
     }
-    fetchUser()
-  }, [])
+  }, [user])
 
   return (
     <Grid container columns={12} spacing={2}>
@@ -110,7 +109,14 @@ export function UpdateUserSettings() {
       <Grid size={12} display='flex' justifyContent='flex-end'>
         <Button
           variant="contained"
-          onClick={() => updateUser(form as User)}
+          onClick={async () => {
+            try {
+              await updateUser(form as User).unwrap()
+              toast.success('Usuario actualizado correctamente')
+            } catch {
+              toast.error('Error al actualizar el usuario')
+            }
+          }}
         >
           Actualizar
         </Button>

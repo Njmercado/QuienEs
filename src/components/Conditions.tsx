@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   Box,
   Button,
@@ -12,34 +12,24 @@ import { SideDrawer } from './ui/SideDrawer'
 import { Modal } from './ui/Modal'
 import { ConditionCard } from './ui/ConditionCard'
 import { ConditionForm } from './ui/ConditionForm'
-import { useGetMedicalConditions, useCreateMedicalCondition, useUpdateMedicalCondition, useDeleteMedicalCondition } from '../api'
+import { 
+  useGetMedicalConditionsQuery, 
+  useCreateMedicalConditionMutation, 
+  useUpdateMedicalConditionMutation, 
+  useDeleteMedicalConditionMutation 
+} from '../store/endpoints/medicalConditionsApi'
 import type { Condition, ConditionData } from '../objects/condition'
 import { EmptyState } from './ui/EmptyState'
 
 export function Conditions() {
   const theme = useTheme()
-  const [conditions, setConditions] = useState<Condition[]>([])
+  const { data: conditions = [] } = useGetMedicalConditionsQuery()
   const [editingCondition, setEditingCondition] = useState<Condition>()
   const [deletingId, setDeletingId] = useState<string>()
   const [openDrawer, setOpenDrawer] = useState(false)
-
-  const { getConditions } = useGetMedicalConditions()
-  const { createCondition } = useCreateMedicalCondition()
-  const { updateCondition } = useUpdateMedicalCondition()
-  const { deleteCondition } = useDeleteMedicalCondition()
-
-  const loadConditions = async () => {
-    try {
-      const data = await getConditions()
-      setConditions(data ?? [])
-    } catch {
-      toast.error('Error al cargar las condiciones')
-    }
-  }
-
-  useEffect(() => {
-    loadConditions()
-  }, [])
+  const [createCondition] = useCreateMedicalConditionMutation()
+  const [updateCondition] = useUpdateMedicalConditionMutation()
+  const [deleteCondition] = useDeleteMedicalConditionMutation()
 
   const handleOpenCreate = () => {
     setEditingCondition(undefined)
@@ -57,22 +47,30 @@ export function Conditions() {
   }
 
   const handleSave = async (data: ConditionData) => {
-    await createCondition(data)
-    handleCloseDrawer()
-    loadConditions()
+    try {
+      await createCondition(data).unwrap()
+      toast.success(`Condición "${data.title}" guardada`)
+      handleCloseDrawer()
+    } catch {
+      toast.error('Error al guardar la condición')
+    }
   }
 
   const handleUpdate = async (data: Condition) => {
-    await updateCondition(data)
-    handleCloseDrawer()
-    loadConditions()
+    try {
+      await updateCondition(data).unwrap()
+      toast.success(`Condición "${data.title}" actualizada`)
+      handleCloseDrawer()
+    } catch {
+      toast.error('Error al actualizar la condición')
+    }
   }
 
   const handleDeleteConfirm = async () => {
     if (!deletingId) return
     try {
-      await deleteCondition(deletingId)
-      setConditions((prev) => prev.filter((c) => c.id !== deletingId))
+      await deleteCondition(deletingId).unwrap()
+      toast.success('Condición eliminada')
     } catch {
       toast.error('Error al eliminar la condición')
     } finally {

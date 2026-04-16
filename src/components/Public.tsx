@@ -7,34 +7,17 @@ import MonitorHeartRoundedIcon from '@mui/icons-material/MonitorHeartRounded'
 import LocalHospitalRoundedIcon from '@mui/icons-material/LocalHospitalRounded'
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded'
 import StopRoundedIcon from '@mui/icons-material/StopRounded'
-import { useGetPublicProfile } from '../api'
-import { type PublicProfileType } from '../objects/publicProfile'
+import { useGetPublicProfileQuery } from '../store/endpoints/profilesApi'
+
 import { playProfileAudio, stopProfileAudio } from '../utils/audioTTS'
 
 export function Public() {
   const { token } = useParams()
   const theme = useTheme()
-  const [profile, setProfile] = useState<PublicProfileType | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const { data: profile, isLoading, isError, isFetching } = useGetPublicProfileQuery(token as string, { skip: !token })
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
-  const { getPublicProfile } = useGetPublicProfile()
-
-  useEffect(() => {
-    setLoading(true)
-    if (!token) {
-      setError(true)
-      setLoading(false)
-      return
-    }
-    getPublicProfile(token).then((data) => {
-      setProfile(data)
-    }).catch(() => {
-      setError(true)
-    }).finally(() => {
-      setLoading(false)
-    })
-  }, [token])
+  const loading = isLoading || isFetching
+  const error = isError || !token
 
   // Stop audio parsing when unmounting to prevent ghost audio reading
   useEffect(() => {

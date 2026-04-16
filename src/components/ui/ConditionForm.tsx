@@ -7,7 +7,7 @@ import type { Condition, ConditionData } from '../../objects/condition'
 export interface ConditionFormProps {
   condition?: Condition
   onSave: (data: ConditionData) => void
-  onUpdate: (data: Condition) => void
+  onUpdate?: (data: Condition) => void
   onCancel: () => void
 }
 
@@ -55,7 +55,7 @@ export function ConditionForm({ condition, onSave, onUpdate, onCancel }: Conditi
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (condition?.id) {
-      onUpdate({ ...condition, ...form })
+      onUpdate?.({ ...condition, ...form } as Condition)
     } else {
       onSave({ ...form })
     }

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Box, Typography, IconButton, Card } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { useGetSOSContacts } from '../../api'
+import { useGetSOSContactsQuery } from '../../store/endpoints/sosContactsApi'
 import type { SOSContact } from '../../objects/sosContact'
 import type { Profile } from '../../objects/profile'
 
@@ -26,20 +25,7 @@ interface LightSOSContactCardProps {
  * @returns A React component.
  */
 export function ProfileSOSContacts({ form, setForm }: ProfileSOSContactsProps) {
-  const { getSOSContacts } = useGetSOSContacts()
-  const [contacts, setContacts] = useState<SOSContact[]>([])
-
-  useEffect(() => {
-    async function fetchContacts() {
-      try {
-        const data = await getSOSContacts()
-        if (data) setContacts(data)
-      } catch (err) {
-        console.error('Error fetching SOS contacts', err)
-      }
-    }
-    fetchContacts()
-  }, [])
+  const { data: contacts = [] } = useGetSOSContactsQuery()
 
   const selectedIds = form.sos_contacts || []
 

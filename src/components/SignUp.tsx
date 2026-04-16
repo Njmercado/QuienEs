@@ -24,7 +24,7 @@ import ShieldIcon from '@mui/icons-material/Shield'
 import LoginIcon from '@mui/icons-material/Login'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { useNavigate } from 'react-router-dom'
-import { useCreateUser } from '../api'
+import { useCreateUserMutation } from '../store/endpoints/usersApi'
 
 export function SignUp() {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ export function SignUp() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  const { createUser } = useCreateUser()
+  const [createUser] = useCreateUserMutation()
 
   // TODO: Uncomment when terms and conditions are ready
   // const [acceptedTerms, setAcceptedTerms] = useState(false)
@@ -85,7 +85,7 @@ export function SignUp() {
         name: name.split(' ')[0],
         last_name: name.split(' ')[1] || '',
         full_name: name,
-      })
+      }).unwrap()
 
       toast.success('User created successfully')
       navigate('/dashboard')
