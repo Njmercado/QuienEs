@@ -8,6 +8,7 @@ import { Toaster } from 'react-hot-toast'
 import { ThemeProvider, createTheme, } from '@mui/material'
 import { ProtectedRoute } from './utils/protectedRoute'
 import { ROUTES } from './constants'
+import { Landing } from './components/Landing'
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -302,7 +303,7 @@ function App() {
           }}
         />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path={ROUTES.LANDING} element={<Landing />} />
           <Route path={ROUTES.LOG_IN} element={<Login />} />
           <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
           <Route path={ROUTES.DASHBOARD + "/*"} element={

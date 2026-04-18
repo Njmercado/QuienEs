@@ -57,7 +57,7 @@ export function Menu() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    navigate('/')
+    navigate(ROUTES.LOG_IN)
   }
 
   return (

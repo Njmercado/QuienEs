@@ -8,4 +8,5 @@ export const ROUTES = {
   PROFILE: '/profile',
   SETTINGS: '/settings',
   EMERGENCY_HISTORY: '/emergency-history',
+  LANDING: '/',
 }
