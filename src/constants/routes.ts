@@ -9,4 +9,5 @@ export const ROUTES = {
   SETTINGS: '/settings',
   EMERGENCY_HISTORY: '/emergency-history',
   LANDING: '/',
+  BUY: '/buy',
 }

@@ -32,9 +32,9 @@ const STEPS: StepCardData[] = [
   {
     number: '01',
     icon: <WatchIcon sx={{ fontSize: 32 }} />,
-    title: 'Usa tu accesorio de identificación',
+    title: 'Usa tu pulsera de identificación',
     description:
-      'Lleva tu accesorio en todo momento. Diseñado para soportar condiciones extremas sin perder legibilidad.',
+      'Lleva tu pulsera en todo momento. Diseñada para soportar condiciones extremas sin perder legibilidad.',
     accentBg: 'rgba(0, 110, 42, 0.05)',
     iconBg: 'primary.main',
     iconColor: 'primary.contrastText',
@@ -44,7 +44,7 @@ const STEPS: StepCardData[] = [
     icon: <QrCodeScannerIcon sx={{ fontSize: 32 }} />,
     title: 'Escaneo de Emergencia',
     description:
-      'En caso de incidente, los equipos de rescate escanean el código QR único impreso en tu accesorio desde cualquier smartphone.',
+      'En caso de incidente, los equipos de rescate escanean el código QR único impreso en tu pulsera desde cualquier smartphone.',
     accentBg: 'rgba(0, 200, 83, 0.05)',
     iconBg: 'secondary.main',
     iconColor: 'secondary.contrastText',
@@ -54,7 +54,7 @@ const STEPS: StepCardData[] = [
     icon: <FolderSharedIcon sx={{ fontSize: 32 }} />,
     title: 'Acceso Instantáneo a Datos',
     description:
-      'El personal médico accede a tu historial vital, alergias y contactos de emergencia al instante, permitiendo decisiones rápidas.',
+      'El personal médico accede a tu información médica guardada al instante, permitiendo decisiones rápidas.',
     accentBg: 'rgba(198, 40, 40, 0.05)',
     iconBg: 'error.main',
     iconColor: 'error.contrastText',

@@ -9,6 +9,7 @@ import { ThemeProvider, createTheme, } from '@mui/material'
 import { ProtectedRoute } from './utils/protectedRoute'
 import { ROUTES } from './constants'
 import { Landing } from './components/Landing'
+import { Buy } from './components/Buy'
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -303,7 +304,9 @@ function App() {
           }}
         />
         <Routes>
+          {/* TODO: Wrap Landing and Buy views into one single view to avoid render again the header, footer and common components */}
           <Route path={ROUTES.LANDING} element={<Landing />} />
+          <Route path={ROUTES.BUY} element={<Buy />} />
           <Route path={ROUTES.LOG_IN} element={<Login />} />
           <Route path={ROUTES.SIGN_UP} element={<SignUp />} />
           <Route path={ROUTES.DASHBOARD + "/*"} element={
