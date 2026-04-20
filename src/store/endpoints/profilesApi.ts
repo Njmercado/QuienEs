@@ -1,6 +1,7 @@
 import { apiSlice } from '../apiSlice'
 import { supabase } from '../../lib/supabase'
 import type { Profile } from '../../objects/profile'
+import type { ProfileData } from '../../objects/profile'
 import type { Condition } from '../../objects/condition'
 import type { SOSContact } from '../../objects/sosContact'
 import type { PublicProfileType } from '../../objects/publicProfile'
@@ -48,7 +49,7 @@ export const profilesApi = apiSlice.injectEndpoints({
       // Uses Profile tag since public profile is effectively derived from Profile updates
       providesTags: ['Profile']
     }),
-    createProfile: builder.mutation<void, Profile>({
+    createProfile: builder.mutation<void, ProfileData>({
       queryFn: async (profile) => {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return { error: { status: 401, data: 'Unauthorized' } }

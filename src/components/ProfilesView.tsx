@@ -1,4 +1,4 @@
-import { type Profile as ProfileType } from '../objects/profile'
+import { type Profile as ProfileType, type ProfileData as ProfileDataType } from '../objects/profile'
 import { useEffect, useState } from 'react'
 import { Profile } from './ui/Profile'
 import toast from 'react-hot-toast'
@@ -45,17 +45,26 @@ export function ProfilesView() {
     generateQR(user?.id)
   }, [user?.id, generateQR])
 
-  const handleCreateProfile = async (profile: ProfileType) => {
+  const handleCreateProfile = async (profile: ProfileDataType) => {
     if (profiles.length == 0) {
       profile.chosen = true
     }
-    await createProfile(profile).unwrap()
-    toast.success(`Perfil ${profile.profile_title} guardado`)
+    const { error } = await createProfile(profile)
+
+    if (error) {
+      toast.error(error as string)
+    } else {
+      toast.success(`Perfil ${profile.profile_title} guardado`)
+    }
   }
 
   const handleUpdateChosenStatus = async (id: string, currentChosenProfileId?: string) => {
-    await updateChosenStatus({ id, currentChosenProfileId }).unwrap()
-    toast.success('Perfil actualizado')
+    const { error } = await updateChosenStatus({ id, currentChosenProfileId })
+    if (error) {
+      toast.error(error as string)
+    } else {
+      toast.success('Perfil actualizado')
+    }
   }
 
   const handleDeleteProfile = async (id: string) => {
@@ -195,12 +204,12 @@ export function ProfilesView() {
       {/* Profile Drawer */}
       <SideDrawer isOpen={openProfileDrawer} onClose={handleOnCloseDrawer} title="Nuevo Perfil" permanent={false}>
         <Profile
-          onSave={(profile: ProfileType) => {
-            if (profile.id) {
-              updateProfile(profile).unwrap().then(() => toast.success(`Perfil ${profile.profile_title} actualizado`)).catch((err) => toast.error(err.data || 'Error updating profile'))
-            } else {
-              handleCreateProfile(profile).catch((err) => toast.error(err.data || 'Error creating profile'))
-            }
+          onSave={(profile: ProfileDataType) => {
+            handleCreateProfile(profile)
+            handleOnCloseDrawer()
+          }}
+          onUpdate={(profile: ProfileType) => {
+            updateProfile(profile).unwrap()
             handleOnCloseDrawer()
           }}
           onDelete={(id: string) => {

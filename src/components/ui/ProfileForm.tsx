@@ -18,7 +18,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
   }, [profile])
 
   useEffect(() => {
-    onUpdate(form)
+    if (form) onUpdate(form)
   }, [form])
 
   return (
@@ -39,14 +39,14 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
         <FormInput
           label="Titulo"
           placeholder="Perfil Deportivo"
-          value={form.profile_title || ''}
+          value={form?.profile_title || ''}
           onChange={(e) => setForm({ ...form, profile_title: e.target.value })}
           onClick={(e) => e.stopPropagation()}
         />
         <FormInput
           label="Descripción Perfil"
           placeholder="Perfil Deportivo"
-          value={form.profile_description || ''}
+          value={form?.profile_description || ''}
           onChange={(e) => setForm({ ...form, profile_description: e.target.value })}
           onClick={(e) => e.stopPropagation()}
           textarea

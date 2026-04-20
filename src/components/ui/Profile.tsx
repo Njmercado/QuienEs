@@ -1,55 +1,50 @@
 import { useState, useEffect } from 'react'
 import { ProfileForm } from './ProfileForm'
-import { type Profile as ProfileType } from '../../objects/profile'
+import { type Profile as ProfileType, type ProfileData as ProfileDataType } from '../../objects/profile'
 import { Box, Button } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import DeleteIcon from '@mui/icons-material/Delete'
 
-const EMPTY_PROFILE: ProfileType = {
-  id: '',
-  profile_title: '',
-  profile_description: '',
-  medical_conditions: [],
-  sos_contacts: [],
-  insurance_name: '',
-  insurance_number: '',
-  chosen: false,
-}
-
 interface ProfileProps {
   onSave: (profile: ProfileType) => void
+  onUpdate: (profile: ProfileType) => void
   profile?: ProfileType
   onDelete?: (id: string) => void
 }
 
-export function Profile({ onSave, profile, onDelete }: ProfileProps) {
-  const [localProfile, setLocalProfile] = useState<ProfileType>(profile || EMPTY_PROFILE)
+export function Profile({ onUpdate, onSave, profile, onDelete }: ProfileProps) {
+  const [localProfile, setLocalProfile] = useState<ProfileType>()
 
   useEffect(() => {
-    setLocalProfile(profile || EMPTY_PROFILE)
+    setLocalProfile(profile)
   }, [profile]);
 
-  const onUpdate = (profile: ProfileType) => {
+  const handleUpdate = (profile: ProfileType) => {
     setLocalProfile(profile)
   }
 
   const handleSave = () => {
     if (!localProfile) return
-    onSave(localProfile)
+
+    if (localProfile?.id) {
+      onUpdate(localProfile as ProfileType)
+    } else {
+      onSave(localProfile as ProfileDataType)
+    }
   }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, px: 16, py: 8 }}>
       <ProfileForm
-        profile={localProfile}
-        onUpdate={onUpdate}
+        profile={localProfile ?? {} as ProfileType}
+        onUpdate={handleUpdate}
       />
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
 
         {
-          localProfile.id && (
+          localProfile?.id && (
             <Button
-              onClick={() => onDelete?.(localProfile.id)}
+              onClick={() => onDelete?.(localProfile?.id || '')}
               variant="contained"
               color="error"
               fullWidth
@@ -71,7 +66,7 @@ export function Profile({ onSave, profile, onDelete }: ProfileProps) {
           sx={{ py: 1.8 }}
         >
           {
-            localProfile.id ? 'Actualizar perfil' : 'Crear perfil'
+            localProfile?.id ? 'Actualizar perfil' : 'Crear perfil'
           }
         </Button>
       </Box>
