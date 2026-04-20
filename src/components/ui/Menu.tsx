@@ -13,8 +13,8 @@ import PersonIcon from '@mui/icons-material/Person'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
-import { useAuth } from '../../contexts/AuthContext'
 import { ROUTES } from '../../constants'
+import { useGetUserQuery } from '../../store/endpoints/usersApi'
 
 export interface MenuOption {
   label: string
@@ -25,7 +25,7 @@ export interface MenuOption {
 export function Menu() {
   const theme = useTheme()
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { data: user } = useGetUserQuery()
 
   const OPTIONS: Array<MenuOption> = [
     {
@@ -77,7 +77,7 @@ export function Menu() {
           <PersonIcon sx={{ color: theme.palette.custom.primary[100] }} />
         </Card>
         <Typography sx={{ color: theme.palette.custom.primary[100], fontSize: theme.customSizes.font.xl, fontWeight: 700 }}>
-          {user?.identities?.[0].identity_data?.display_name}
+          {user?.full_name}
         </Typography>
       </Box>
 

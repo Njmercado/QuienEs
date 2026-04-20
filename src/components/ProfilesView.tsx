@@ -58,6 +58,16 @@ export function ProfilesView() {
     }
   }
 
+  const handleUpdateProfile = async (profile: ProfileType) => {
+    const { error } = await updateProfile(profile)
+
+    if (error) {
+      toast.error(error as string)
+    } else {
+      toast.success(`Perfil ${profile.profile_title} actualizado`)
+    }
+  }
+
   const handleUpdateChosenStatus = async (id: string, currentChosenProfileId?: string) => {
     const { error } = await updateChosenStatus({ id, currentChosenProfileId })
     if (error) {
@@ -209,7 +219,7 @@ export function ProfilesView() {
             handleOnCloseDrawer()
           }}
           onUpdate={(profile: ProfileType) => {
-            updateProfile(profile).unwrap()
+            handleUpdateProfile(profile)
             handleOnCloseDrawer()
           }}
           onDelete={(id: string) => {
