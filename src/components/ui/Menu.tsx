@@ -115,6 +115,9 @@ export function Menu({ onClose, mobileOnly }: MenuProps) {
             </ListItemButton>
           </ListItem>
         </Box>
+        <Box sx={{ textAlign: 'center', py: 2, borderTop: `1px solid ${theme.palette.custom.neutral[100]}` }}>
+          Developed by <a target="_blank" rel="noopener noreferrer" href="https://github.com/njmercado">Nino Mercado</a>
+        </Box>
       </Box>
     )
   }

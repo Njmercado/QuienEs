@@ -15,6 +15,7 @@ import {
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined'
 import { ROUTES } from '../constants'
+import MedicalServicesIcon from '@mui/icons-material/MedicalServices'
 
 export function Login() {
   const navigate = useNavigate()
@@ -51,11 +52,32 @@ export function Login() {
       }}
     >
       {/* Header Logo */}
-      <Box sx={{ p: { xs: 3, sm: 4 } }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {/* here should be the Logo */}
-          <Typography sx={{ fontWeight: 900, color: '#006E2A', fontSize: theme => theme.customSizes.font.lg }}>
-            QUIENES
+      <Box sx={{
+        cursor: 'pointer', width: 'fit-content',
+        ':hover': { bgcolor: theme => theme.palette.custom.primary[10] },
+        transition: 'background-color 0.3s ease-in-out',
+        borderRadius: 1,
+        px: { xs: 2, md: 4 },
+        height: 64,
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+        onClick={() => navigate(ROUTES.LANDING)}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, cursor: 'pointer' }} onClick={() => navigate(ROUTES.LANDING)}>
+          <MedicalServicesIcon
+            sx={{ color: 'primary.main', fontSize: 28 }}
+          />
+          <Typography
+            sx={{
+              fontSize: '1.5rem',
+              fontWeight: 800,
+              color: 'primary.main',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            QuienEs
           </Typography>
         </Box>
       </Box>
@@ -108,8 +130,8 @@ export function Login() {
               <Alert
                 severity="error"
                 sx={{
-                  bgcolor: (theme) => theme.palette.custom?.tertiary[5] || 'error.light',
-                  color: (theme) => theme.palette.custom?.tertiary[100] || 'error.main',
+                  bgcolor: (theme) => theme.palette.custom?.tertiary[5],
+                  color: (theme) => theme.palette.custom?.tertiary[100],
                 }}
               >
                 {error}
@@ -160,10 +182,10 @@ export function Login() {
                 sx={{
                   fontSize: theme => theme.customSizes.font.small,
                   fontWeight: 700,
-                  color: '#888',
+                  color: 'text.secondary',
                   textDecoration: 'none',
                   letterSpacing: '0.05em',
-                  '&:hover': { color: '#555' }
+                  '&:hover': { color: 'primary.main' }
                 }}
               >
                 ¿OLVIDASTE TU CONTRASEÑA?
@@ -174,7 +196,7 @@ export function Login() {
 
         {/* Footer actions */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, mb: 6 }}>
-          <Typography sx={{ fontSize: theme => theme.customSizes.font.base, color: '#666' }}>
+          <Typography sx={{ fontSize: theme => theme.customSizes.font.base, color: 'text.secondary' }}>
             ¿Tienes una manilla QuienEs?
           </Typography>
           <Button
@@ -187,6 +209,9 @@ export function Login() {
             Activar Manilla
           </Button>
         </Box>
+      </Box>
+      <Box sx={{ textAlign: 'center', py: 2, borderTop: theme => `1px solid ${theme.palette.custom.neutral[100]}` }}>
+        Developed by <a target="_blank" rel="noopener noreferrer" href="https://github.com/njmercado">Nino Mercado</a>
       </Box>
     </Box>
   )

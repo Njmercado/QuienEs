@@ -14,7 +14,7 @@ import LoginIcon from '@mui/icons-material/Login'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import { useActivateLicenseMutation, useLazyGetLicenseQuery } from '../store/endpoints/licenseApi'
 import { ROUTES } from '../constants'
-import { LicenseDetails, NoLicense } from './ui'
+import { LicenseDetails, NoLicense, LandingHeader } from './ui'
 
 export function Activate() {
   const { license_id } = useParams<{ license_id: string }>()
@@ -181,22 +181,7 @@ export function Activate() {
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
 
       {/* Top Navbar */}
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        px: { xs: 3, md: 6 },
-        py: 3,
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ fontWeight: 900, color: theme.palette.primary.main, fontSize: theme.customSizes.font.lg }}>
-            QUIENES
-          </Typography>
-        </Box>
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4, alignItems: 'center' }}>
-          <Typography><Link to={ROUTES.LOG_IN}>INICIAR SESIÓN</Link></Typography>
-        </Box>
-      </Box>
+      <LandingHeader />
 
       {/* Main Content */}
       <Box sx={{
@@ -255,6 +240,11 @@ export function Activate() {
             </Box>
           </Box>
         </Card>
+      </Box>
+
+      {/* TODO: This informative piece of code needs to be separeted into a component, for the moment its here to not lose the idea */}
+      <Box sx={{ textAlign: 'center', py: 2, borderTop: `1px solid ${theme.palette.custom.neutral[100]}` }}>
+        Developed by <a target="_blank" rel="noopener noreferrer" href="https://github.com/njmercado">Nino Mercado</a>
       </Box>
     </Box>
   )

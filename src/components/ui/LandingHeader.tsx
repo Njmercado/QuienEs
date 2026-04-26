@@ -41,7 +41,7 @@ export function LandingHeader() {
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Button
           component={Link}
           to={ROUTES.BUY}
