@@ -1,4 +1,4 @@
-import { type ComponentProps, memo, useState } from 'react'
+import { type ComponentProps, useState } from 'react'
 import { TextField, FormHelperText } from '@mui/material'
 import { type SxProps, type Theme } from '@mui/material'
 
@@ -17,7 +17,7 @@ interface FormInputProps extends Omit<ComponentProps<'input'>, 'onChange'> {
   isValid?: (valid: boolean, messages?: string[]) => void
 }
 
-export function Input({
+export function FormInput({
   label, value, onChange, onClick,
   type = 'text', placeholder, disabled = false,
   textarea = false, sx,
@@ -75,7 +75,3 @@ export function Input({
     </>
   )
 }
-
-export const FormInput = memo(Input, (prevProps, nextProps) => {
-  return prevProps.value === nextProps.value
-})

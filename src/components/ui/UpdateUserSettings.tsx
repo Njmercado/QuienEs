@@ -28,7 +28,14 @@ export function UpdateUserSettings() {
     } catch (error: any) {
       switch (error.status) {
         case 400:
-          toast.error('Error al actualizar el usuario, campos inválidos')
+          if (error.data.match('already exist')[0]) {
+            toast.error(`Error al actualizar el usuario, el nombre de usuario ${form?.public_username} ya existe`)
+          } else {
+            toast.error('Error al actualizar el usuario, campos inválidos')
+          }
+          break;
+        case 409:
+          toast.error(`Error al actualizar el usuario, verifique los campos`)
           break;
         default:
           toast.error('Error al actualizar el usuario, por favor intente de nuevo')
@@ -44,7 +51,7 @@ export function UpdateUserSettings() {
         <FormInput
           label="Nombre de usuario público"
           name="public_username"
-          value={form?.public_username?.toUpperCase()}
+          value={form?.public_username?.toUpperCase() ?? ''}
           onChange={(value) => handleChange('public_username')(value.toUpperCase())}
           rules={[
             {
