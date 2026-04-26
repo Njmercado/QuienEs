@@ -41,7 +41,7 @@ export const profilesApi = apiSlice.injectEndpoints({
         const { data, error } = await supabase
           .from('PublicProfile')
           .select('*')
-          .eq('user_id', token)
+          .or(`username.eq.${token},public_username.eq.${token}`)
           .single()
         if (error) return { error: { status: 500, data: error.message } }
         return { data }

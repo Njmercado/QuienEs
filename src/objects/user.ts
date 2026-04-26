@@ -11,6 +11,9 @@ export interface UserData {
   from: string
   living_in: string,
   devices?: string[],
+  username: string
+  code: number
+  public_username?: string | null
 }
 
 export interface User extends UserData {

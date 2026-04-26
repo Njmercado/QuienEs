@@ -12,11 +12,19 @@ export function Dashboard() {
   const theme = useTheme()
 
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 3fr' }, maxWidth: '100vw', overflowX: 'hidden', minHeight: '100vh' }}>
-      <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+    <Box sx={{
+      display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr 3fr' },
+      maxWidth: '100vw', overflowX: 'hidden', height: '100vh'
+    }}>
+      <Box sx={{
+        display: { xs: 'none', md: 'block' },
+        maxHeight: '100%', overflowY: 'hidden'
+      }}>
         <Menu />
       </Box>
-      <Box position="relative" pb={{ xs: 4, sm: 4, md: 2 }}>
+      <Box
+        pb={{ xs: 4, sm: 4, md: 2 }}
+        sx={{ position: 'relative', minHeight: '100%', overflowY: 'auto' }}>
         {/* Content */}
         <Routes>
           <Route path="/" element={<ProfilesView />} />
@@ -40,11 +48,8 @@ export function Dashboard() {
         </Routes>
         <Box
           sx={{
-            display: { xs: 'block', md: 'none' },
-            position: 'fixed',
-            width: '100%',
-            bottom: 0,
-            zIndex: 1000,
+            display: { xs: 'block', md: 'none' }, position: 'fixed',
+            width: '100%', bottom: 0, zIndex: 1000,
             bgcolor: theme.palette.background.paper,
             borderTop: `1px solid ${theme.palette.custom.neutral[100]}`
           }}>

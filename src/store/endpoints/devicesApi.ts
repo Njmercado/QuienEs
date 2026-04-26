@@ -4,7 +4,7 @@ import type { Device } from '../../objects/device'
 
 export const devicesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getDevices: builder.query<Device[], void>({
+    getDevices: builder.query<Device, void>({
       queryFn: async () => {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) return { error: { status: 401, data: 'Unauthorized' } }
@@ -13,6 +13,7 @@ export const devicesApi = apiSlice.injectEndpoints({
           .from('Device')
           .select('*')
           .eq('user_id', user.id)
+          .single() // TODO: for the moment users will have only one device per account
 
         if (error) return { error: { status: 500, data: error.message } }
         return { data: data || [] }

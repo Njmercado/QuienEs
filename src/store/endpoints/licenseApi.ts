@@ -94,7 +94,7 @@ export const licenseApi = apiSlice.injectEndpoints({
           .from('Device')
           .insert({
             user_id: authData.user.id,
-            type: 'Band',
+            type: license.device_type || 'Band',
           })
           .select('id')
           .single()
@@ -110,6 +110,7 @@ export const licenseApi = apiSlice.injectEndpoints({
           last_name: license.user_last_name,
           full_name: `${license.user_name} ${license.user_last_name}`,
           devices: deviceData?.id ? [deviceData.id] : [],
+          code: Math.floor(1000 + Math.random() * 9000),
         })
 
         if (userError) {
