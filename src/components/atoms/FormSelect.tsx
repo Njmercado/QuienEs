@@ -11,12 +11,14 @@ interface FormSelectProps extends Omit<ComponentProps<'select'>, 'onChange'> {
   placeholder?: string
   label?: string
   onChange?: (e: SelectChangeEvent<string>) => void
+  disabled?: boolean
+  required?: boolean
 }
 
-export function FormSelect({ label, options, placeholder = 'Select an option', value, onChange }: FormSelectProps) {
+export function FormSelect({ label, options, placeholder = 'Select an option', value, onChange, disabled = false, required = false }: FormSelectProps) {
   return (
-    <FormControl fullWidth variant="filled">
-      {label && <InputLabel sx={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' }}>{label}</InputLabel>}
+    <FormControl fullWidth variant="filled" disabled={disabled} required={required} error={required && value === ''}>
+      {label && <InputLabel sx={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: '0.15em' }}>{label}{required && '*'}</InputLabel>}
       <Select
         value={(value as string) || ''}
         onChange={onChange}

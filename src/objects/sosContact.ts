@@ -12,3 +12,10 @@ export interface SOSContact extends SOSContactData {
   user_id?: string
   created_at?: string
 }
+
+export interface ContactData {
+  name: string
+  lastName: string
+  email: string
+  phone: string
+}

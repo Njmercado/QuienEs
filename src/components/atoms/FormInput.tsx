@@ -21,7 +21,7 @@ export function FormInput({
   label, value, onChange, onClick,
   type = 'text', placeholder, disabled = false,
   textarea = false, sx,
-  rules, isValid,
+  rules, isValid, required = false,
   ...props
 }: FormInputProps) {
   const [errors, setErrors] = useState<string[]>([])
@@ -36,6 +36,11 @@ export function FormInput({
         if (message) newErrors.push(message)
       }
     })
+
+    if (required && changedValue.trim() === '') {
+      newErrors.push('Campo requerido')
+    }
+
     onChange?.(changedValue, newErrors.length > 0)
     setErrors(newErrors)
     isValid?.(newErrors.length === 0, newErrors)
@@ -50,7 +55,7 @@ export function FormInput({
             fontWeight: 600, color: (t: Theme) => t.palette.custom.primary[100]
           }}
         >
-          {label}
+          {label}{required && '*'}
         </FormLabel>
       )}
       <TextField

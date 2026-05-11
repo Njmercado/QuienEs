@@ -1,3 +1,14 @@
+export const RH = {
+  ['O+']: 'O+',
+  ['O-']: 'O-',
+  ['A+']: 'A+',
+  ['A-']: 'A-',
+  ['B+']: 'B+',
+  ['B-']: 'B-',
+  ['AB+']: 'AB+',
+  ['AB-']: 'AB-',
+};
+
 export const RH_LABEL = {
   "A+": "A Positivo",
   "A-": "A Negativo",

@@ -4,23 +4,21 @@ import { buildQRUrl } from '../../utils/buildQRUrl'
 import { ROUTES } from '../../constants'
 
 interface EngravingTagProps {
-  name: string
-  lastName: string
-  data: EngravingData
-  showEngraving: boolean
+  name?: string
+  lastName?: string
+  data?: EngravingData
+  showEngraving?: boolean
 }
 
 export function EngravingTag({ name, lastName, data, showEngraving }: EngravingTagProps) {
   const theme = useTheme()
   const qrUrl = buildQRUrl(`/${ROUTES.PUBLIC}/demo`)
 
-  const fullName = [name, lastName].filter(Boolean).join(' ')
-  const nameLine = showEngraving && fullName
-  const rhLine = showEngraving && data.rh
-  const idLine = showEngraving && data.idNumber
-  const conditionLine = showEngraving && data.condition
-  const sosLine = showEngraving && (data.sosRelationship || data.sosPhone)
-    ? `${data.sosRelationship}${data.sosRelationship && data.sosPhone ? ': ' : ''}${data.sosPhone}`
+  const nameLine = showEngraving && `${name} ${lastName}`
+  const rhLine = showEngraving && data?.rh
+  const conditionLine = showEngraving && data?.condition
+  const sosLine = showEngraving && (data?.sosRelationship || data?.sosPhone)
+    ? `${data?.sosRelationship}${data?.sosRelationship && data?.sosPhone ? ': ' : ''}${data?.sosPhone}`
     : null
 
   return (
@@ -62,17 +60,21 @@ export function EngravingTag({ name, lastName, data, showEngraving }: EngravingT
         }}
       />
 
-      <Box sx={{
-        textAlign: 'center',
-        color: theme.palette.custom.metal.text,
-        lineHeight: 1.2,
-      }}>
-        {nameLine && <Typography sx={{ fontSize: theme.customSizes.font.small }}>{nameLine}</Typography>}
-        {rhLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{rhLine}</Typography>}
-        {idLine && <Typography sx={{ fontSize: theme.customSizes.font.small }}>{idLine}</Typography>}
-        {conditionLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{conditionLine}</Typography>}
-        {sosLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{sosLine}</Typography>}
-      </Box>
+      {
+        showEngraving && (
+
+          <Box sx={{
+            textAlign: 'center',
+            color: theme.palette.custom.metal.text,
+            lineHeight: 1.2,
+          }}>
+            {nameLine && <Typography sx={{ fontSize: theme.customSizes.font.small }}>{nameLine}</Typography>}
+            {rhLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{rhLine}</Typography>}
+            {conditionLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{conditionLine}</Typography>}
+            {sosLine && <Typography sx={{ fontWeight: 700, fontSize: theme.customSizes.font.small }}>{sosLine}</Typography>}
+          </Box>
+        )
+      }
     </Box>
   )
 }

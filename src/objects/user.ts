@@ -1,21 +1,10 @@
-export const RH = {
-  ['O+']: 'O+',
-  ['O-']: 'O-',
-  ['A+']: 'A+',
-  ['A-']: 'A-',
-  ['B+']: 'B+',
-  ['B-']: 'B-',
-  ['AB+']: 'AB+',
-  ['AB-']: 'AB-',
-} as const;
-
-type RHType = keyof typeof RH
+import type { RH } from '../constants'
 
 export interface UserData {
   name: string
   last_name: string
   full_name: string
-  rh: RHType
+  rh: keyof typeof RH
   sex: string
   personal_phone_number: string
   personal_phone_indicative: string

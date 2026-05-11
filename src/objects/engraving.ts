@@ -1,17 +1,8 @@
-import type { RH } from './user'
+import type { RH } from '../constants'
 
 export interface EngravingData {
   rh: keyof typeof RH | ''
-  idNumber: string
   condition: string
   sosRelationship: string
   sosPhone: string
-}
-
-export const INITIAL_ENGRAVING: EngravingData = {
-  rh: '',
-  idNumber: '',
-  condition: '',
-  sosRelationship: '',
-  sosPhone: '',
 }
