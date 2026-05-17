@@ -9,8 +9,10 @@ import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded'
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded'
 import StopRoundedIcon from '@mui/icons-material/StopRounded'
 import AccessibilityNewRoundedIcon from '@mui/icons-material/AccessibilityNewRounded'
-import { useGetPublicProfileQuery } from '../../store/endpoints/profilesApi'
+import { useGetPublicProfileQuery, useSendLocationToEmergencyContactsMutation } from '../../store/endpoints'
 import { playProfileAudio, stopProfileAudio } from '../../utils/audioTTS'
+import { ApiStatusHandler } from '../atoms'
+import type { PublicProfile } from '../../objects/publicProfile'
 
 const MedicalSection = ({ title, icon, bgColor, color, children, shadowColor, theme }: any) => (
   <Box sx={{ mb: 3 }}>
@@ -32,58 +34,69 @@ const MedicalSection = ({ title, icon, bgColor, color, children, shadowColor, th
   </Box>
 )
 
-const GOOGLE_MAPS_URL = 'https://www.google.com/maps/place'
-
 export function Public() {
   const { token } = useParams()
-  const theme = useTheme()
   const { data: profile, isLoading, isError, isFetching } = useGetPublicProfileQuery(token as string, { skip: !token })
-  const [location, setLocation] = useState<string>('')
+  const [saveEmergency] = useSendLocationToEmergencyContactsMutation()
+  const [location, setLocation] = useState<{ lat: number, lng: number }>({
+    lat: 0,
+    lng: 0,
+  })
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
   const loading = isLoading || isFetching
   const error = isError || !token
+
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      if (location.lat === 0 && location.lng === 0) {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (location.lat !== 0 && location.lng !== 0 && profile?.user_id) {
+      saveEmergency({
+        latitude: location.lat,
+        longitude: location.lng,
+        token: profile.user_id,
+        name: profile.name
+      })
+    }
+  }, [location, profile?.user_id])
 
   useEffect(() => {
     return () => stopProfileAudio()
   }, [])
 
-  if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const url = `${GOOGLE_MAPS_URL}/${position.coords.latitude},${position.coords.longitude}`
-      setLocation(url)
-    })
-  }
+  return (
+    <ApiStatusHandler
+      isLoading={loading}
+      isError={error}
+      hasData={!!profile}
+      loadingMessage="CARGANDO PERFIL..."
+      errorMessage="El perfil no existe o es privado."
+    >
+      <PublicContent
+        profile={profile!}
+        isPlayingAudio={isPlayingAudio}
+        setIsPlayingAudio={setIsPlayingAudio}
+      />
+    </ApiStatusHandler>
+  )
+}
 
-  const sendLocationToEmergencyContacts = () => {
-    window.open(location, '_blank')
-  }
+interface PublicContentProps {
+  profile: PublicProfile
+  isPlayingAudio: boolean
+  setIsPlayingAudio: (value: boolean) => void
+}
 
-  if (loading) {
-    return (
-      <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <Box sx={{
-          width: 60, height: 60, borderRadius: '50%', backgroundColor: theme.palette.custom?.primary?.[10],
-          display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'pulse 1.5s infinite'
-        }}>
-          <MonitorHeartRoundedIcon sx={{ color: theme.palette.primary.main, fontSize: 32 }} />
-        </Box>
-        <Typography sx={{ mt: 3, fontWeight: 800, color: 'text.disabled', letterSpacing: '0.15em', fontSize: theme.customSizes?.font?.small }}>
-          CARGANDO PERFIL...
-        </Typography>
-      </Box>
-    )
-  }
-
-  if (error || !profile) {
-    return (
-      <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 3 }}>
-        <Box sx={{ p: 4, borderRadius: 4, textAlign: 'center', maxWidth: 400, width: '100%', border: `1px solid ${theme.palette.divider}`, backgroundColor: 'white' }}>
-          <Typography variant="h2" fontWeight={900} sx={{ color: 'text.disabled' }}>404</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontWeight: 600 }}>El perfil no existe o es privado.</Typography>
-        </Box>
-      </Box>
-    )
-  }
+function PublicContent({ profile, isPlayingAudio, setIsPlayingAudio }: PublicContentProps) {
+  const theme = useTheme()
 
   const handleAudioToggle = () => {
     if (isPlayingAudio) {
@@ -314,7 +327,6 @@ export function Public() {
                   <Button
                     variant="contained"
                     href={`tel:${contact.phone_number}`}
-                    onClick={sendLocationToEmergencyContacts}
                     fullWidth
                     sx={{
                       mt: 1,

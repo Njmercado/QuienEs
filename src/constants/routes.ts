@@ -12,4 +12,5 @@ export const ROUTES = {
   BUY: '/buy',
   RECOVER_PASSWORD: '/recover-password',
   UPDATE_PASSWORD: '/update-password',
+  EMERGENCY: '/emergency'
 }

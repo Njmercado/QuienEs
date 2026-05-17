@@ -12,6 +12,7 @@ import { Landing } from './components/pages/Landing'
 import { Buy } from './components/pages/Buy'
 import { RecoverPassword } from './components/pages/RecoverPassword'
 import { UpdatePassword } from './components/pages/UpdatePassword'
+import { Emergency } from './components/pages/Emergency'
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -342,6 +343,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path={ROUTES.PUBLIC + "/:token"} element={<Public />} />
+          <Route path={ROUTES.EMERGENCY + "/:token"} element={<Emergency />} />
         </Routes>
       </AuthProvider>
     </ThemeProvider>

@@ -10,3 +10,5 @@ export * from './Conditions'
 export * from './SOSContact'
 export * from './ProfilesView'
 export * from './Settings'
+export * from './Emergency'
+
