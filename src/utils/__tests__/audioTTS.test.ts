@@ -12,6 +12,7 @@ const mockSpeechSynthesis = {
 }
 
 const baseProfile: PublicProfileType = {
+  user_id: '1',
   name: 'Juan',
   last_name: 'Pérez',
   sex: 'Masculino',

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router'
-import { useGetEmergencyQuery } from '../../store/endpoints/emergency'
+import { useGetAlertQuery } from '../../store/endpoints/alertLogsApi'
 import { Box, Typography, Button, useTheme, Chip } from '@mui/material'
 import MonitorHeartRoundedIcon from '@mui/icons-material/MonitorHeartRounded'
 import MapRoundedIcon from '@mui/icons-material/MapRounded'
@@ -11,28 +11,28 @@ import PinDropRoundedIcon from '@mui/icons-material/PinDropRounded'
 import { ApiStatusHandler, InfoSection } from '../atoms'
 import { buildGoogleMapsUrl, buildHospitalsNearbyUrl, formatDateTime, formatCoordinate } from '../../utils/emergency'
 
-export function Emergency() {
+export function Alert() {
   const { token } = useParams()
-  const { data: emergency, isLoading, isError } = useGetEmergencyQuery(token || '', { skip: !token })
+  const { data: emergency, isLoading, isError } = useGetAlertQuery(token || '', { skip: !token })
 
   return (
     <ApiStatusHandler
       isLoading={isLoading}
       isError={isError}
       hasData={!!emergency}
-      loadingMessage="CARGANDO EMERGENCIA..."
-      errorMessage="No se encontró información de esta emergencia."
+      loadingMessage="CARGANDO ALERTA..."
+      errorMessage="No se encontró información de esta alerta."
     >
-      {emergency && <EmergencyContent emergency={emergency} />}
+      {emergency && <AlertContent emergency={emergency} />}
     </ApiStatusHandler>
   )
 }
 
-interface EmergencyContentProps {
+interface AlertContentProps {
   emergency: { latitude: number; longitude: number; name: string; created_at?: string }
 }
 
-function EmergencyContent({ emergency }: EmergencyContentProps) {
+function AlertContent({ emergency }: AlertContentProps) {
   const theme = useTheme()
   const mapsUrl = buildGoogleMapsUrl(emergency.latitude, emergency.longitude)
   const hospitalsUrl = buildHospitalsNearbyUrl(emergency.latitude, emergency.longitude)

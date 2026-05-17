@@ -9,7 +9,7 @@ import VerifiedUserRoundedIcon from '@mui/icons-material/VerifiedUserRounded'
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded'
 import StopRoundedIcon from '@mui/icons-material/StopRounded'
 import AccessibilityNewRoundedIcon from '@mui/icons-material/AccessibilityNewRounded'
-import { useGetPublicProfileQuery, useSendLocationToEmergencyContactsMutation } from '../../store/endpoints'
+import { useGetPublicProfileQuery, useSendAlertsMutation } from '../../store/endpoints'
 import { playProfileAudio, stopProfileAudio } from '../../utils/audioTTS'
 import { ApiStatusHandler } from '../atoms'
 import type { PublicProfile } from '../../objects/publicProfile'
@@ -37,7 +37,7 @@ const MedicalSection = ({ title, icon, bgColor, color, children, shadowColor, th
 export function Public() {
   const { token } = useParams()
   const { data: profile, isLoading, isError, isFetching } = useGetPublicProfileQuery(token as string, { skip: !token })
-  const [saveEmergency] = useSendLocationToEmergencyContactsMutation()
+  const [sendAlerts] = useSendAlertsMutation()
   const [location, setLocation] = useState<{ lat: number, lng: number }>({
     lat: 0,
     lng: 0,
@@ -58,12 +58,11 @@ export function Public() {
   }
 
   useEffect(() => {
-    if (location.lat !== 0 && location.lng !== 0 && profile?.user_id) {
-      saveEmergency({
+    if (profile?.user_id && location.lat !== 0 && location.lng !== 0) {
+      sendAlerts({
+        user_id: profile.user_id,
         latitude: location.lat,
         longitude: location.lng,
-        token: profile.user_id,
-        name: profile.name
       })
     }
   }, [location, profile?.user_id])
