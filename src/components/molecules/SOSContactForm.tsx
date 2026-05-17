@@ -67,15 +67,18 @@ export function SOSContactForm({ contact, onSave, onCancel }: SOSContactFormProp
         onChange={(value) => handleChange('last_name', value)}
         placeholder="Ej: García"
       />
-      <Box sx={{ display: 'flex', gap: 2 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 3fr' }, gap: 2 }}>
         <FormInput
+          type='number'
+          inputMode='numeric'
           label="Indicativo"
           value={formData.phone_indicative}
           onChange={(value) => handleChange('phone_indicative', value)}
           placeholder="+57"
-          sx={{ maxWidth: 110 }}
         />
         <FormInput
+          type='number'
+          inputMode='numeric'
           label="Teléfono"
           value={formData.phone_number}
           onChange={(value) => handleChange('phone_number', value)}
