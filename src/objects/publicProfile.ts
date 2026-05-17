@@ -6,6 +6,7 @@ import { type UserData } from "./user"
 export interface PublicProfile extends
   Omit<UserData, 'id' | 'email' | 'created_at' | 'updated_at'>,
   Omit<ProfileData, 'chosen' | 'medical_conditions' | 'sos_contacts'> {
+  user_id: string,
   medical_conditions: ConditionData[]
   sos_contacts: SOSContactData[]
   medical_devices?: string[]
