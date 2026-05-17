@@ -15,7 +15,7 @@ export const alertLogsApi = apiSlice.injectEndpoints({
       queryFn: async ({ user_id, latitude, longitude }) => {
         // TODO: block this call when so many requests are made in a short period of time.
         // Also develop a logic to avoid constant additions of register into DB.
-        const { data, error } = await supabase.functions.invoke('send_alert_notification', {
+        const { error } = await supabase.functions.invoke('send_alert_notification', {
           body: {
             user_id,
             lng: longitude,
@@ -23,7 +23,7 @@ export const alertLogsApi = apiSlice.injectEndpoints({
           }
         })
         if (error) return { error: { status: 500, data: error.message } }
-        return { data }
+        return { data: undefined }
       },
       invalidatesTags: ['AlertLog']
     }),

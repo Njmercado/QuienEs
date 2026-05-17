@@ -1,4 +1,4 @@
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { useGetAlertQuery } from '../../store/endpoints/alertLogsApi'
 import { Box, Typography, Button, useTheme, Chip } from '@mui/material'
 import MonitorHeartRoundedIcon from '@mui/icons-material/MonitorHeartRounded'
@@ -9,7 +9,7 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import PinDropRoundedIcon from '@mui/icons-material/PinDropRounded'
 import { ApiStatusHandler, InfoSection } from '../atoms'
-import { buildGoogleMapsUrl, buildHospitalsNearbyUrl, formatDateTime, formatCoordinate } from '../../utils/emergency'
+import { buildGoogleMapsUrl, buildHospitalsNearbyUrl, formatDateTime, formatCoordinate } from '../../utils'
 
 export function Alert() {
   const { token } = useParams()

@@ -46,14 +46,12 @@ export function Public() {
   const loading = isLoading || isFetching
   const error = isError || !token
 
-  if ('geolocation' in navigator) {
+  if ('geolocation' in navigator && location.lat === 0 && location.lng === 0) {
     navigator.geolocation.getCurrentPosition((position) => {
-      if (location.lat === 0 && location.lng === 0) {
-        setLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        })
-      }
+      setLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      })
     })
   }
 
@@ -65,7 +63,7 @@ export function Public() {
         longitude: location.lng,
       })
     }
-  }, [location, profile?.user_id])
+  }, [location, profile?.user_id, sendAlerts])
 
   useEffect(() => {
     return () => stopProfileAudio()
